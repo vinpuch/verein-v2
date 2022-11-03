@@ -50,11 +50,6 @@ import java.util.UUID;
 @ToString
 @SuppressWarnings({"ClassFanOutComplexity", "JavadocDeclaration", "RequireEmptyLineBeforeBlockTagGroup"})
 public class Verein {
-    /**
-     * Muster für einen gültigen Nachnamen.
-     */
-    public static final String NACHNAME_PATTERN =
-        "(o'|von|von der|von und zu|van)?[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?";
 
     /**
      * Kleinster Wert für eine Kategorie.
@@ -80,8 +75,8 @@ public class Verein {
      * @return Der Nachname.
      */
     @NotEmpty
-    @Pattern(regexp = NACHNAME_PATTERN)
-    private String nachname;
+
+    private String name;
 
     /**
      * Die Emailadresse des Kunden.
@@ -92,21 +87,9 @@ public class Verein {
     @NotNull
     private String email;
 
-    /**
-     * Die Kategorie des Kunden.
-     * @param kategorie Die Kategorie.
-     * @return Die Kategorie.
-     */
-    @Min(MIN_KATEGORIE)
-    @Max(MAX_KATEGORIE)
-    private int kategorie;
 
-    /**
-     * Hat der Verein den Newsletter abonniert.
-     * @param hasNewsletter Ist der Newsletter abonniert?
-     * @return Ist der Newsletter abonniert?
-     */
-    private boolean hasNewsletter;
+
+
 
     /**
      * Das Geburtsdatum des Kunden.
