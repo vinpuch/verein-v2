@@ -18,12 +18,11 @@ package com.acme.verein.entity;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+// import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Daten eines Kunden. In DDD ist Verein ist ein Aggregate Root.
+ * Daten eines Vereins. In DDD ist Verein ist ein Aggregate Root.
  * <img src="../../../../../asciidoc/Verein.svg" alt="Klassendiagramm">
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
@@ -62,7 +61,7 @@ public class Verein {
     public static final long MAX_KATEGORIE = 9L;
 
     /**
-     * Die ID des Kunden.
+     * Die ID des Vereins.
      * @param id Die ID.
      * @return Die ID.
      */
@@ -70,7 +69,7 @@ public class Verein {
     private UUID id;
 
     /**
-     * Der Nachname des Kunden.
+     * Der Nachname des Vereins.
      * @param nachname Der Nachname.
      * @return Der Nachname.
      */
@@ -79,7 +78,7 @@ public class Verein {
     private String name;
 
     /**
-     * Die Emailadresse des Kunden.
+     * Die Emailadresse des Vereins.
      * @param email Die Emailadresse.
      * @return Die Emailadresse.
      */
@@ -89,48 +88,24 @@ public class Verein {
 
 
 
-
-
     /**
-     * Das Geburtsdatum des Kunden.
+     * Das Gruendungsdatum des Vereins.
      * @param geburtsdatum Das Geburtsdatum.
      * @return Das Geburtsdatum.
      */
     @Past
-    private LocalDate geburtsdatum;
+    private LocalDate gruendungssdatum;
 
     /**
-     * Die URL zur Homepage des Kunden.
+     * Die URL zur Homepage des Vereins.
      * @param homepage Die URL zur Homepage.
      * @return Die URL zur Homepage.
      */
     private URL homepage;
 
-    /**
-     * Das Geschlecht des Kunden.
-     * @param geschlecht Das Geschlecht.
-     * @return Das Geschlecht.
-     */
-    private GeschlechtType geschlecht;
 
     /**
-     * Der Familienstand des Kunden.
-     * @param familienstand Der Familienstand.
-     * @return Der Familienstand.
-     */
-    private FamilienstandType familienstand;
-
-    /**
-     * Die Interessen des Kunden.
-     * @param interessen Die Interessen.
-     * @return Die Interessen.
-     */
-    @UniqueElements
-    @ToString.Exclude
-    private List<InteresseType> interessen;
-
-    /**
-     * Der Umsatz des Kunden.
+     * Der Umsatz des Vereins.
      * @param umsatz Der Umsatz.
      * @return Der Umsatz.
      */
@@ -138,7 +113,7 @@ public class Verein {
     private Umsatz umsatz;
 
     /**
-     * Die Adresse des Kunden.
+     * Die Adresse des Vereins.
      * @param adresse Die Adresse.
      * @return Die Adresse.
      */
