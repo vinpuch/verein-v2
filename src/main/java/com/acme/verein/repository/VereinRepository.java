@@ -83,7 +83,7 @@ public final class VereinRepository {
                     return result.isPresent() ? List.of(result.get()) : Collections.emptyList();
                 }
                 case "nachname" -> {
-                    return findByNachname(entry.getValue());
+                    return findByname(entry.getValue());
                 }
                 default -> log.debug("find: ungueltiges Suchkriterium={}", entry.getKey());
             }
@@ -134,13 +134,13 @@ public final class VereinRepository {
     /**
      * Verein anhand des Nachnamens suchen.
      *
-     * @param nachname Der (Teil-) Nachname der gesuchten Vereine
+     * @param name Der (Teil-) Nachname der gesuchten Vereine
      * @return Die gefundenen Vereine oder eine leere Collection
      */
-    public @NonNull Collection<Verein> findByNachname(final CharSequence nachname) {
-        log.debug("findByNachname: nachname={}", nachname);
+    public @NonNull Collection<Verein> findByname(final CharSequence name) {
+        log.debug("findByNachname: nachname={}", name);
         final var vereine = VEREINE.stream()
-            .filter(verein -> verein.getNachname().contains(nachname))
+            .filter(verein -> verein.getName().contains(name))
             .collect(Collectors.toList());
         log.debug("findByNachname: vereine={}", vereine);
         return vereine;
@@ -152,15 +152,15 @@ public final class VereinRepository {
      * @param prefix Nachname-Präfix.
      * @return Die passenden Nachnamen oder eine leere Collection.
      */
-    public @NonNull Collection<String> findNachnamenByPrefix(final @NonNull String prefix) {
+    public @NonNull Collection<String> findnamenByPrefix(final @NonNull String prefix) {
         log.debug("findByNachname: prefix={}", prefix);
-        final var nachnamen = VEREINE.stream()
-            .map(Verein::getNachname)
-            .filter(nachname -> nachname.startsWith(prefix))
+        final var namen = VEREINE.stream()
+            .map(Verein::getName)
+            .filter(name -> name.startsWith(prefix))
             .distinct()
             .collect(Collectors.toList());
-        log.debug("findByNachname: nachnamen={}", nachnamen);
-        return nachnamen;
+        log.debug("findByNachname: nachnamen={}", namen);
+        return namen;
     }
 
     /**

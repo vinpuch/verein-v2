@@ -69,9 +69,9 @@ public class Verein {
     private UUID id;
 
     /**
-     * Der Nachname des Vereins.
-     * @param nachname Der Nachname.
-     * @return Der Nachname.
+     * Der Name des Vereins.
+     * @param name Der name.
+     * @return Der name.
      */
     @NotEmpty
 
@@ -90,7 +90,7 @@ public class Verein {
 
     /**
      * Das Gruendungsdatum des Vereins.
-     * @param geburtsdatum Das Geburtsdatum.
+     * @param gruendungsdatum Das Geburtsdatum.
      * @return Das Geburtsdatum.
      */
     @Past
