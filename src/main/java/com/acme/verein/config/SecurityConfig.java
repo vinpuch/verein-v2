@@ -33,7 +33,7 @@ import static org.springframework.security.crypto.factory.PasswordEncoderFactori
 /**
  * Security-Konfiguration.
  *
- @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 // https://github.com/spring-projects/spring-security/tree/master/samples
 interface SecurityConfig {

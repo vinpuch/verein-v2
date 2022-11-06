@@ -55,9 +55,13 @@ public final class VereinReadService {
         return verein;
     }
 
+    /**
+     *  Methode um alle Vereine zu finden.
+     *
+     *  @return findet alle Vereine
+     */
     public Collection<Verein> findAll() {
-// Implementierung des Use Case
-// abschliessender DB-Zugriff
+
         return repo.findAll();
     }
 }

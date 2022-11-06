@@ -1,0 +1,28 @@
+// https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html
+// https://www.jetbrains.com/help/idea/http-response-handling-examples.html#checking-response-headers-body
+
+### Suche alle Vereine (<Strg><Click> fuer Web Browser)
+GET {{baseUrl}}
+Accept: application/json
+Authorization: Basic {{userAdmin}} {{password}}
+
+> {%
+    client.test('GET: OK', () => {
+      const status = response.status;
+        client.assert(status === 200, `Falscher Statuscode: ${status}`);
+    });
+
+    client.test('GET: application/hal+json', () => {
+        const mimeType = response.contentType.mimeType;
+        client.assert(mimeType === 'application/hal+json', `Falscher MIME-Typ: ${mimeType}`);
+    });
+
+    client.test('GET: body mit Daten', () => {
+        const body = response.body;
+        client.assert(typeof body === 'object', `body: ${JSON.stringify(body)}`);
+        // TODO Optional Chaining
+        const vereine = body._embedded.vereine;
+        client.assert(Array.isArray(vereine), `body: ${JSON.stringify(body)}`);
+        client.assert(vereine.length > 0, `vereine: ${JSON.stringify(vereine)}`);
+    });
+%}

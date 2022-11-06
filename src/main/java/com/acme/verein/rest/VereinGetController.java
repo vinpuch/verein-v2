@@ -22,7 +22,7 @@ import com.acme.verein.service.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 //import org.springframework.hateoas.CollectionModel;
@@ -31,14 +31,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 //import java.util.Map;
 import java.util.Collection;
-import java.util.UUID;
+//import java.util.UUID;
 //import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -76,26 +76,11 @@ final class VereinGetController {
     // https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-ann-methods
     // https://localhost:8080/swagger-ui.html
 
-    /**
-     * Suche anhand der Verein-ID als Pfad-Parameter.
-     *
-     * @param id      ID des zu suchenden Vereins
-     * @param request Das Request-Objekt, um Links für HATEOAS zu erstellen.
-     * @return Eine Response mit dem Statuscode 200 und dem gefundenen Verein mit Atom-Links oder Statuscode 404.
-     */
+
     @GetMapping(path = "{id:" + ID_PATTERN + "}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    ResponseEntity<Verein> findById(@PathVariable final UUID id, final HttpServletRequest request) {
-        log.debug("findById: id={}", id);
-
-        // Anwendungskern
-        final var verein = service.findById(id);
-        log.debug("findById: {}", verein);
-
-        return ok(verein);
-    }
 
     @ExceptionHandler(NotFoundException.class)
     @SuppressWarnings("unused")
