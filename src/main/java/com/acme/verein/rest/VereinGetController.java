@@ -20,6 +20,8 @@ import com.acme.verein.service.VereinReadService;
 import com.acme.verein.service.NotFoundException;
 import com.acme.verein.entity.Verein;
 import com.acme.verein.service.VereinReadService;
+import com.acme.verein.rest.UriHelper;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import static com.acme.verein.rest.UriHelper.getBaseUri;
-import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
@@ -110,13 +111,13 @@ final class VereinGetController {
     @Operation(summary = "Suche mit Suchkriterien", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "CollectionModel mid den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")
-    CollectionModel<VereinModel>> find(
+    CollectionModel<VereinModel> find(
         @RequestParam final Map<String, String> suchkriterien,
         final HttpServletRequest request
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
 
-        final var baseUri = uriHelper.getBaseUri(request);
+        final var baseUri = UriHelper.getBaseUri(request);
         final var models = service.find(suchkriterien)
             .stream()
             .map(verein -> {

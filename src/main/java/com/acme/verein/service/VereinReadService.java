@@ -38,6 +38,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public final class VereinReadService {
+    @SuppressWarnings("VisibilityModifier")
     private final VereinRepository repo;
 
     /**
@@ -56,12 +57,58 @@ public final class VereinReadService {
     }
 
     /**
-     *  Methode um alle Vereine zu finden.
+     * Methode um alle Vereine zu finden.
      *
-     *  @return findet alle Vereine
+     * @return findet alle Vereine
      */
     public Collection<Verein> findAll() {
 
         return repo.findAll();
+    }
+
+
+    /**
+     * Vereine anhand von Suchkriterien als Collection suchen.
+     *
+     * @param suchkriterien Die Suchkriterien
+     * @return Die gefundenen Vereine oder eine leere Liste
+     * @throws NotFoundException Falls keine Vereine gefunden wurden
+     */
+    @SuppressWarnings({"ReturnCount", "NestedIfDepth"})
+    public Collection<Verein> find(final Map<String, String> suchkriterien) {
+        log.debug("find: suchkriterien={}", suchkriterien);
+
+        if (suchkriterien.isEmpty()) {
+            return repo.findAll();
+        }
+// kommt rein
+        if (suchkriterien.size() == 1) {
+            final var name = suchkriterien.get("name");
+            if (name != null) {
+                final var vereine = repo.findByName(name);
+                if (vereine.isEmpty()) {
+                    throw new NotFoundException(suchkriterien);
+                }
+                log.debug("find (name): {}", vereine);
+                return vereine;
+            }
+
+            final var email = suchkriterien.get("email");
+            if (email != null) {
+                final var verein = repo.findByEmail(email);
+                if (verein.isEmpty()) {
+                    throw new NotFoundException(suchkriterien);
+                }
+                final var vereine = List.of(verein.get());
+                log.debug("find (email): {}", vereine);
+                return vereine;
+            }
+        }
+        final var vereine = repo.find(suchkriterien);
+        if (vereine.isEmpty()) {
+            throw new NotFoundException(suchkriterien);
+        }
+        log.debug("find: {}", vereine);
+        return vereine;
     }
 }
