@@ -34,8 +34,7 @@ import static java.lang.Character.getNumericValue;
 final class UriHelper {
     private static final String X_FORWARDED_PROTO = "x-forwarded-proto";
 
-    private UriHelper() {
-    }
+    private UriHelper() {}
 
     /**
      * Basis-URI ermitteln, d.h. ohne Query-Parameter.
