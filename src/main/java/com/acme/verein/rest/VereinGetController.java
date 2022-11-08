@@ -16,6 +16,7 @@
  */
 package com.acme.verein.rest;
 
+import static com.acme.verein.rest.UriHelper.getBaseUri;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import com.acme.verein.service.VereinReadService;
@@ -30,17 +31,24 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.acme.verein.rest.UriHelper.getBaseUri;
+// import static com.acme.verein.rest.UriHelper.getBaseUri;
 import static com.acme.verein.rest.VereinGetController.REST_PATH;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.ResponseEntity.notFound;
+// import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
@@ -62,14 +70,13 @@ final class VereinGetController {
      */
     static final String ID_PATTERN =
         "[\\dA-Fa-f]{8}-[\\dA-Fa-f]{4}-[\\dA-Fa-f]{4}-[\\dA-Fa-f]{4}-[\\dA-Fa-f]{12}";
-@SuppressWarnings("TrainingComment")
-static final String REST_PATH= "/rest";
+    @SuppressWarnings("TrainingComment")
+    static final String REST_PATH = "/rest";
 
 
     //static final String NACHNAME_PATH = "/nachname"; //NOSONAR
-
     private final VereinReadService service;
-private final UriHelper uriHelper;
+    private final UriHelper uriHelper;
 
     // https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-ann-methods
     // https://localhost:8080/swagger-ui.html
@@ -79,31 +86,27 @@ private final UriHelper uriHelper;
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    VereinModel findById(@PathVariable final UUID id, final HttpServletRequest request){
+    VereinModel findById(@PathVariable final UUID id, final HttpServletRequest request) {
         log.debug("findByID: id={}", id);
 
         // Anwendungskern
-
         final var verein = service.findById(id);
         log.debug("findByID: {}", verein);
 
         final var model = new VereinModel(verein);
-// nochmal korrigieren
+
+        // nochmal korrigieren
         return model;
     }
 
 
-
-
-
-
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "findAll", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<Collection<Verein>> findAll() {
         final var vereine = service.findAll();
-        return ok(vereine); //
+        return ok(vereine);
     }
 
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "find", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Suche mit Suchkriterien", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "CollectionModel mid den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")
@@ -113,7 +116,7 @@ private final UriHelper uriHelper;
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
 
-        final var baseUri = uriHelper.getBaseUri(request);
+        final var baseUri = getBaseUri(request);
         final var models = service.find(suchkriterien)
             .stream()
             .map(verein -> {

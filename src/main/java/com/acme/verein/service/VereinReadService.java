@@ -81,7 +81,8 @@ public final class VereinReadService {
         if (suchkriterien.isEmpty()) {
             return repo.findAll();
         }
-// kommt rein
+
+        // kommt rein
         if (suchkriterien.size() == 1) {
             final var name = suchkriterien.get("name");
             if (name != null) {

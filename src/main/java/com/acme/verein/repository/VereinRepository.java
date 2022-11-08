@@ -21,14 +21,24 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-//import java.util.Collections;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.OptionalInt;
+/*
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.OptionalInt;
+*/
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
-//import java.util.stream.Collectors;
-//import java.util.stream.IntStream;
+/*
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+*/
 
 import static com.acme.verein.repository.DB.VEREINE;
 //import static java.util.UUID.randomUUID;
@@ -46,6 +56,7 @@ public final class VereinRepository {
      * Einen Verein anhand seiner ID suchen.
      *
      * @param id Die Id des gesuchten Vereins
+     *
      * @return Optional mit dem gefundenen Vereis oder leeres Optional
      */
     public Optional<Verein> findById(final UUID id) {
@@ -56,6 +67,14 @@ public final class VereinRepository {
         log.debug("findById: {}", result);
         return result;
     }
+
+    /**
+     * E-Mail wird gesucht.
+     *
+     * @param email des gesuchten Vereins
+     *
+     * @return Optional mit dem gefundenen Vereis oder leeres Optional
+     */
     public Optional<Verein> findByEmail(final String email) {
         log.debug("findByEmail: {}", email);
         final var result = VEREINE.stream()
@@ -65,6 +84,13 @@ public final class VereinRepository {
         return result;
     }
 
+    /**
+     * Name wird gesucht.
+     *
+     * @param name des gesuchten Vereins
+     *
+     * @return Collection mit dem gefundenen Vereinen
+     */
     public @NonNull Collection<Verein> findByName(final CharSequence name) {
         log.debug("findByname: name={}", name);
         final var vereine = VEREINE.stream()
@@ -78,7 +104,7 @@ public final class VereinRepository {
     /**
      * Alle Vereine als Collection ermitteln, wie sie später auch von der DB kommen.
      *
-     * @return Alle Vereine
+     * @return gibt alle Vereine zurück
      */
     public @NonNull Collection<Verein> findAll() {
         return VEREINE;
@@ -89,7 +115,8 @@ public final class VereinRepository {
      * Vereine anhand von Suchkriterien ermitteln.
      * Z.B. mit GET https://localhost:8080/api?name=A&amp;plz=7
      *
-     * @param suchkriterien Suchkriterien.
+     *  @param suchkriterien Suchkriterien.
+     *
      * @return Gefundene Vereine.
      */
     @SuppressWarnings({"ReturnCount", "JavadocLinkAsPlainText"})

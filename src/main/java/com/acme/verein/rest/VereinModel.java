@@ -24,7 +24,7 @@ import com.acme.verein.entity.Umsatz;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
+// import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

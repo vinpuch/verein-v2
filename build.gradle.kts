@@ -355,7 +355,7 @@ tasks.named<BootBuildImage>("bootBuildImage") {
             // https://github.com/paketo-buildpacks/bellsoft-liberica/releases
             // https://paketo.io/docs/howto/java/#use-an-alternative-jvm
             // default: 11
-            "BP_JVM_VERSION" to "19.0.0",
+            "BP_JVM_VERSION" to "19.0.1+11",
             // https://github.com/paketo-buildpacks/bellsoft-liberica#configuration
             // https://github.com/paketo-buildpacks/spring-boot: Default=50 bei WebFlux statt 250
             // "BPL_JVM_THREAD_COUNT" to "250",

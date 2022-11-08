@@ -1,46 +1,46 @@
 // https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html
 // https://www.jetbrains.com/help/idea/http-response-handling-examples.html#checking-response-headers-body
 
-### Suche mit vorhandenem Nachnamen
-GET {{baseUrl}}?nachname=Alpha
-Accept: application/hal+json
+### Suche mit vorhandenem namen
+GET {{baseUrl}}/find?name=Alpha
+Accept: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
 > {%
-    client.test('GET mit vorhandenem Nachnamen: OK', () => {
+    client.test('GET mit vorhandenem namen: OK', () => {
       const status = response.status;
         client.assert(status === 200, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('GET mit vorhandenem Nachnamen: application/hal+json', () => {
+    client.test('GET mit vorhandenem namen: application/json', () => {
         const mimeType = response.contentType.mimeType;
-        client.assert(mimeType === 'application/hal+json', `Falscher MIME-Typ: ${mimeType}`);
+        client.assert(mimeType === 'application/json', `Falscher MIME-Typ: ${mimeType}`);
     });
 
-    client.test('GET mit vorhandenem Nachnamen: body mit Daten', () => {
+    client.test('GET mit vorhandenem namen: body mit Daten', () => {
         const body = response.body;
         client.assert(typeof body === 'object', `body: ${JSON.stringify(body)}`);
         // TODO Optional Chaining
         const vereine = body._embedded.vereine;
         client.assert(Array.isArray(vereine), `body: ${JSON.stringify(body)}`);
         client.assert(vereine.length > 0, `vereine: ${JSON.stringify(vereine)}`);
-        vereine.map(verein => verein.nachname)
-            .forEach(nachname => client.assert(nachname.includes('Alpha'), `vereine: ${JSON.stringify(vereine)}`));
+        vereine.map(verein => verein.name)
+            .forEach(name => client.assert(name.includes('Alpha'), `vereine: ${JSON.stringify(vereine)}`));
     });
 %}
 
-### Suche mit nicht-vorhandenem Nachnamen
-GET {{baseUrl}}?nachname=Nichtvorhanden
-Accept: application/hal+json
+### Suche mit nicht-vorhandenem namen
+GET {{baseUrl}}?name=Nichtvorhanden
+Accept: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
 > {%
-    client.test('GET mit nicht-vorhandenem Nachnamen: Not Found', () => {
+    client.test('GET mit nicht-vorhandenem namen: Not Found', () => {
         const status = response.status;
         client.assert(status === 404, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('GET mit nicht-vorhandenem Nachnamen: leerer Body', () => {
+    client.test('GET mit nicht-vorhandenem namen: leerer Body', () => {
         const body = response.body;
         client.assert(body === null, `body: ${JSON.stringify(body)}`);
     });
@@ -48,7 +48,7 @@ Authorization: Basic {{userAdmin}} {{password}}
 
 ### Suche mit vorhandener Email (mit URL Encoding)
 GET {{baseUrl}}?email=admin%40acme.com
-Accept: application/hal+json
+Accept: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
 > {%
@@ -57,9 +57,9 @@ Authorization: Basic {{userAdmin}} {{password}}
         client.assert(status === 200, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('GET mit vorhandener Email: application/hal+json', () => {
+    client.test('GET mit vorhandener Email: application/json', () => {
         const mimeType = response.contentType.mimeType;
-        client.assert(mimeType === 'application/hal+json', `Falscher MIME-Typ: ${mimeType}`);
+        client.assert(mimeType === 'application/json', `Falscher MIME-Typ: ${mimeType}`);
     });
 
     client.test('GET mit vorhandener Email: body mit Daten', () => {
@@ -75,7 +75,7 @@ Authorization: Basic {{userAdmin}} {{password}}
 
 ### Suche mit nicht-vorhandener Email
 GET {{baseUrl}}?email=nicht%40vorhanden.com
-Accept: application/hal+json
+Accept: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
 > {%
@@ -90,28 +90,28 @@ Authorization: Basic {{userAdmin}} {{password}}
     });
 %}
 
-### Suche Nachnamen mit Praefix
-GET {{baseUrl}}/nachname/A
+### Suche namen mit Praefix
+GET {{baseUrl}}/name/A
 Accept: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
 > {%
-    client.test('Suche Nachnamen mit Praefix und admin: OK', () => {
+    client.test('Suche namen mit Praefix und admin: OK', () => {
       const status = response.status;
         client.assert(status === 200, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('Suche Nachnamen mit Praefix und admin: application/json', () => {
+    client.test('Suche namen mit Praefix und admin: application/json', () => {
         const mimeType = response.contentType.mimeType;
         client.assert(mimeType === 'application/json', `Falscher MIME-Typ: ${mimeType}`);
     });
 
-    client.test('Suche Nachnamen mit Praefix und admin: body mit Daten', () => {
+    client.test('Suche namen mit Praefix und admin: body mit Daten', () => {
         const body = response.body;
         client.assert(typeof body === 'string', `Falscher body: ${typeof body}`);
-        const nachnamen = body.slice(1, body.length - 2).split(', ');
-        client.assert(Array.isArray(nachnamen), `body: ${JSON.stringify(body)}`);
-        client.assert(nachnamen.length > 0, `nachnamen: ${JSON.stringify(nachnamen)}`);
-        nachnamen.forEach(nachname => nachname.startsWith('A'), `body: ${body}`);
+        const namen = body.slice(1, body.length - 2).split(', ');
+        client.assert(Array.isArray(namen), `body: ${JSON.stringify(body)}`);
+        client.assert(namen.length > 0, `namen: ${JSON.stringify(namen)}`);
+        namen.forEach(name => name.startsWith('A'), `body: ${body}`);
     });
 %}

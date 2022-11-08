@@ -34,8 +34,27 @@ import static java.lang.Character.getNumericValue;
 final class UriHelper {
     private static final String X_FORWARDED_PROTO = "x-forwarded-proto";
 
-    private UriHelper() {}
+    private UriHelper() { }
 
+
+
+
+    /**
+     * Original-URI ermitteln, falls Istio bzw. Envoy genutzt wird.
+     *
+     * @param request Servlet-Request
+     * @return Original-URI
+     */
+    @SneakyThrows(URISyntaxException.class)
+    static URI getRequestUri(final HttpServletRequest request) {
+        final var envoyOriginalPath = request.getHeader("x-envoy-original-path");
+        if (envoyOriginalPath == null) {
+            return new URI(request.getRequestURL().toString());
+        }
+        final var host = request.getHeader("Host");
+        final var forwardedProto = request.getHeader(X_FORWARDED_PROTO);
+        return URI.create(forwardedProto + "://" + host + envoyOriginalPath);
+    }
     /**
      * Basis-URI ermitteln, d.h. ohne Query-Parameter.
      *
@@ -128,20 +147,4 @@ final class UriHelper {
         return baseUri;
     }
 
-    /**
-     * Original-URI ermitteln, falls Istio bzw. Envoy genutzt wird.
-     *
-     * @param request Servlet-Request
-     * @return Original-URI
-     */
-    @SneakyThrows(URISyntaxException.class)
-    static URI getRequestUri(final HttpServletRequest request) {
-        final var envoyOriginalPath = request.getHeader("x-envoy-original-path");
-        if (envoyOriginalPath == null) {
-            return new URI(request.getRequestURL().toString());
-        }
-        final var host = request.getHeader("Host");
-        final var forwardedProto = request.getHeader(X_FORWARDED_PROTO);
-        return URI.create(forwardedProto + "://" + host + envoyOriginalPath);
-    }
 }
