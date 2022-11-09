@@ -16,35 +16,24 @@
  */
 package com.acme.verein.rest;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-import com.acme.verein.service.VereinReadService;
-import com.acme.verein.service.NotFoundException;
 import com.acme.verein.entity.Verein;
+import com.acme.verein.service.NotFoundException;
+import com.acme.verein.service.VereinReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-// import static com.acme.verein.rest.UriHelper.getBaseUri;
 import static com.acme.verein.rest.VereinGetController.REST_PATH;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-// import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
@@ -81,7 +70,7 @@ final class VereinGetController {
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    Verein findById(@PathVariable final UUID id, final HttpServletRequest request) {
+    Verein findById(@PathVariable final UUID id) {
         log.debug("findByID: id={}", id);
 
         // Anwendungskern
@@ -104,8 +93,7 @@ final class VereinGetController {
     @ApiResponse(responseCode = "200", description = "CollectionModel mid den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")
     Collection<Verein> find(
-        @RequestParam final Map<String, String> suchkriterien,
-        final HttpServletRequest request
+        @RequestParam final Map<String, String> suchkriterien
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
 
