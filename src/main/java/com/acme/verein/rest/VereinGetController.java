@@ -16,7 +16,6 @@
  */
 package com.acme.verein.rest;
 
-import static com.acme.verein.rest.UriHelper.getBaseUri;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import com.acme.verein.service.VereinReadService;
@@ -30,12 +29,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +72,6 @@ final class VereinGetController {
 
     //static final String NACHNAME_PATH = "/nachname"; //NOSONAR
     private final VereinReadService service;
-    private final UriHelper uriHelper;
 
     // https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-ann-methods
     // https://localhost:8080/swagger-ui.html
@@ -86,17 +81,15 @@ final class VereinGetController {
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    VereinModel findById(@PathVariable final UUID id, final HttpServletRequest request) {
+    Verein findById(@PathVariable final UUID id, final HttpServletRequest request) {
         log.debug("findByID: id={}", id);
 
         // Anwendungskern
         final var verein = service.findById(id);
         log.debug("findByID: {}", verein);
 
-        final var model = new VereinModel(verein);
-
         // nochmal korrigieren
-        return model;
+        return verein;
     }
 
 
@@ -106,17 +99,19 @@ final class VereinGetController {
         return ok(vereine);
     }
 
-    @GetMapping(path = "find", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Suche mit Suchkriterien", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "CollectionModel mid den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")
-    CollectionModel<VereinModel> find(
+    Collection<Verein> find(
         @RequestParam final Map<String, String> suchkriterien,
         final HttpServletRequest request
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
 
-        final var baseUri = getBaseUri(request);
+        final var models = service.find(suchkriterien);
+
+        /*final var baseUri = getBaseUri(request);
         final var models = service.find(suchkriterien)
             .stream()
             .map(verein -> {
@@ -125,9 +120,9 @@ final class VereinGetController {
                 model.add(selfLink);
                 return model;
             })
-            .collect(Collectors.toList());
+            .collect(Collectors.toList());*/
         log.debug("find: {}", models);
-        return CollectionModel.of(models);
+        return models;
     }
 
     @ExceptionHandler

@@ -2,7 +2,7 @@
 // https://www.jetbrains.com/help/idea/http-response-handling-examples.html#checking-response-headers-body
 
 ### Suche mit vorhandenem namen
-GET {{baseUrl}}/find?name=Alpha
+GET {{baseUrl}}/?name=Alpha
 Accept: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
