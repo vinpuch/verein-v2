@@ -41,7 +41,7 @@ import org.springframework.hateoas.server.core.Relation;
     "nachname", "email", "kategorie", "hasNewsletter", "geburtsdatum", "homepage", "geschlecht", "familienstand",
     "interessen", "umsatz", "adresse"
 })
-@Relation(collectionRelation = "kunden", itemRelation = "kunde")
+@Relation(collectionRelation = "verein", itemRelation = "verein")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter
@@ -60,7 +60,7 @@ final class VereinModel extends RepresentationModel<VereinModel> {
     VereinModel(final Verein verein) {
         name = verein.getName();
         email = verein.getEmail();
-        gruendungssdatum = verein.getGruendungssdatum();
+        gruendungssdatum = verein.getGruendungsdatum();
         homepage = verein.getHomepage();
         umsatz = verein.getUmsatz();
         adresse = verein.getAdresse();

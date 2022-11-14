@@ -54,29 +54,9 @@ Content-Type: application/json
 POST {{baseUrl}}
 Content-Type: application/json
 
+//daten werden eingelesen
 < data/verein-neu-invalid.json
 
-> {%
-    client.test('Einen neuen Verein mit ungueltigen Daten anlegen: Unprocessable Entity (422)', () => {
-        const status = response.status;
-        client.assert(status === 422, `Falscher Statuscode: ${status}`);
-    });
-
-    client.test('Einen neuen Verein mit ungueltigen Daten anlegen: application/problem+json', () => {
-        const mimeType = response.contentType.mimeType;
-        client.assert(mimeType === "application/problem+json", `Falscher MIME-Typ: ${mimeType}`);
-    });
-
-    client.test('Einen neuen Verein mit ungueltigen Daten anlegen: body mit ProblemDetail', () => {
-        const body = response.body;
-        client.assert(typeof body === 'object', `body: ${JSON.stringify(body)}`);
-       const detail = body.detail;
-        client.assert(detail !== null && detail !== undefined && typeof detail === 'string' && detail.length > 2, `body: ${JSON.stringify(body)}`);
-        // noinspection JSObjectNullOrUndefined
-        const detailArr = detail.slice(1, -1).split(', ');
-        client.assert(detailArr.length > 0, `detail: ${JSON.stringify(detail)}`);
-    });
-%}
 
 ### Einen neuen Verein mit fehlerhaften Datentypen anlegen: 400 (Bad Request)
 POST {{baseUrl}}

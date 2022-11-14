@@ -99,16 +99,6 @@ final class VereinGetController {
 
         final var models = service.find(suchkriterien);
 
-        /*final var baseUri = getBaseUri(request);
-        final var models = service.find(suchkriterien)
-            .stream()
-            .map(verein -> {
-                final var model = new VereinModel(verein);
-                final var selfLink = Link.of(baseUri + "/" + verein.getId());
-                model.add(selfLink);
-                return model;
-            })
-            .collect(Collectors.toList());*/
         log.debug("find: {}", models);
         return models;
     }

@@ -14,8 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.acme.verein.service;
+
+import lombok.Getter;
 
 /**
- * REST-Schnittstelle für Vereine.
+ * Exception, falls die Emailadresse bereits existiert.
+ *
+ * @author [Jürgen Zimmermann](mailto:Juergen.Zimmermann@h-ka.de)
  */
-package com.acme.verein.rest;
+@Getter
+public class EmailExistsException extends RuntimeException {
+    /**
+     * Bereits vorhandene Emailadresse.
+     */
+    private final String email;
+
+    EmailExistsException(@SuppressWarnings("ParameterHidesMemberVariable") final String email) {
+        super("Die Emailadresse " + email + " existiert bereits");
+        this.email = email;
+    }
+}

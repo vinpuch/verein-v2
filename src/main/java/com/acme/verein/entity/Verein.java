@@ -94,7 +94,7 @@ public class Verein {
      * @return Das Geburtsdatum.
      */
     @Past
-    private LocalDate gruendungssdatum;
+    private LocalDate gruendungsdatum;
 
     /**
      * Die URL zur Homepage des Vereins.

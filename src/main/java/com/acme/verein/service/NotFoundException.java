@@ -44,7 +44,7 @@ public final class NotFoundException extends RuntimeException {
     }
 
     NotFoundException(final Map<String, String> suchkriterien) {
-        super("Keine Kunden gefunden.");
+        super("Keine Vereine gefunden.");
         //noinspection AssignmentToNull
         id = null;
         this.suchkriterien = suchkriterien;
@@ -52,7 +52,7 @@ public final class NotFoundException extends RuntimeException {
 
     @SuppressWarnings("AssignmentToNull")
     NotFoundException() {
-        super("Keine Kunden gefunden.");
+        super("Keine Vereine gefunden.");
         id = null;
         suchkriterien = null;
     }
