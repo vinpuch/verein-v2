@@ -20,6 +20,7 @@ import com.acme.verein.entity.Verein;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import static java.util.UUID.randomUUID;
 
 /*
 import java.util.Collections;
@@ -27,14 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 */
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 /*
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -67,6 +63,20 @@ public final class VereinRepository {
         log.debug("findById: {}", result);
         return result;
     }
+    /**
+     * Abfrage, ob es einen Verein mit gegebener Emailadresse gibt.
+     *
+     * @param email Emailadresse für die Suche
+     * @return true, falls es einen solchen Verein gibt, sonst false
+     */
+    public boolean isEmailExisting(final String email) {
+        log.debug("isEmailExisting: email={}", email);
+        final var count = VEREINE.stream()
+            .filter(verein -> Objects.equals(verein.getEmail(), email))
+            .count();
+        log.debug("isEmailExisting: count={}", count);
+        return count > 0L;
+    }
 
     /**
      * E-Mail wird gesucht.
@@ -84,6 +94,53 @@ public final class VereinRepository {
         return result;
     }
 
+    /**
+     * Einen vorhandenen Kunden aktualisieren.
+     *
+     * @param verein Das Objekt mit den neuen Daten
+     */
+    public void update(final @NonNull Verein verein) {
+        log.debug("update: {}", verein);
+        final OptionalInt index = IntStream
+            .range(0, VEREINE.size())
+            .filter(i -> Objects.equals(VEREINE.get(i).getId(), verein.getId()))
+            .findFirst();
+        log.trace("update: index={}", index);
+        if (index.isEmpty()) {
+            return;
+        }
+        VEREINE.set(index.getAsInt(), verein);
+        log.debug("update: {}", verein);
+    }
+    /**
+     * Einen neuen Verein anlegen.
+     *
+     * @param verein Das Objekt des neu anzulegenden Kunden.
+     * @return Der neu angelegte Verein mit generierter ID und kleingeschriebener Emailadresse
+     */
+    public @NonNull Verein create(final @NonNull Verein verein) {
+        log.debug("create: {}", verein);
+        verein.setId(randomUUID());
+        VEREINE.add(verein);
+        log.debug("create: {}", verein);
+        return verein;
+    }
+
+    /**
+     * Einen vorhandenen Verein löschen.
+     *
+     * @param id Die ID des zu löschenden Vereins.
+     */
+    public void deleteById(final UUID id) {
+        log.debug("deleteById: id={}", id);
+        final OptionalInt index = IntStream
+            .range(0, VEREINE.size())
+            .filter(i -> Objects.equals(VEREINE.get(i).getId(), id))
+            .findFirst();
+        log.trace("deleteById: index={}", index);
+        index.ifPresent(VEREINE::remove);
+        log.debug("deleteById: #KUNDEN={}", VEREINE.size());
+    }
     /**
      * Name wird gesucht.
      *
