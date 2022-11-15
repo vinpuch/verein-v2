@@ -20,7 +20,7 @@ package com.acme.verein.rest;
 
 import com.acme.verein.service.ConstraintViolationsException;
 import com.acme.verein.service.EmailExistsException;
-import com.acme.verein.service.VereinReadService;
+//import com.acme.verein.service.VereinReadService;
 import com.acme.verein.service.VereinWriteService;
 import com.acme.verein.service.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PatchMapping;
+//import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
+//import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -76,8 +76,7 @@ final class VereinWriteController {
     private static final String PROBLEM_PATH = "/problem/"; //NOSONAR
 
     private final VereinWriteService service;
-    private final VereinReadService readService;
-    private final VereinPatcher patcher;
+    //private final VereinReadService readService;
 
     /**
      * Einen neuen Verein-Datensatz anlegen.
@@ -131,32 +130,7 @@ final class VereinWriteController {
         return noContent().build();
     }
 
-    /**
-     * Einen vorhandenen Verein-Datensatz durch PATCH aktualisieren.
-     *
-     * @param id ID der zu aktualisierenden Verein.
-     * @param operations Die Collection der Patch-Operationen
-     * @return Response mit Statuscode 204 oder 422, falls Constraints verletzt sind oder
-     *      der JSON-Datensatz syntaktisch nicht korrekt ist oder falls die Emailadresse bereits existiert oder 400
-     *      falls syntaktische Fehler vorliegen.
-     */
-    @PatchMapping(path = "{id:" + ID_PATTERN + "}", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "Eine Verein mit einzelnen neuen Werten aktualisieren", tags = "Aktualisieren")
-    @ApiResponse(responseCode = "204", description = "Aktualisiert")
-    @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
-    @ApiResponse(responseCode = "404", description = "Verein nicht vorhanden")
-    @ApiResponse(responseCode = "422", description = "Constraints verletzt oder Email vorhanden")
-    ResponseEntity<Void> patch(
-        @PathVariable final UUID id,
-        @RequestBody final Collection<PatchOperation> operations
-    ) {
-        log.debug("patch: id={}, operations={}", id, operations);
-        final var verein = readService.findById(id);
-        patcher.patch(verein, operations);
-        log.debug("patch: {}", verein);
-        service.update(verein, id);
-        return noContent().build();
-    }
+
 
     /**
      * Eine vorhandene Verein anhand seiner ID löschen.

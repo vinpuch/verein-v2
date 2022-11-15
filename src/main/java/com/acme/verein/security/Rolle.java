@@ -24,11 +24,10 @@ public enum Rolle {
      * Die Rolle ADMIN.
      */
     ADMIN,
-
     /**
-     * Die Rolle KUNDE.
+     * Die Rolle VEREIN.
      */
-    KUNDE,
+    VEREIN,
 
     /**
      * Die Rolle ACTUATOR.

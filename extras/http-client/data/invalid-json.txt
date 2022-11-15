@@ -1,4 +1,4 @@
 {
-    "nachname": "Nachname"
+    "name": "Name"
     "email": "email@test.de",
 }

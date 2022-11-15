@@ -27,7 +27,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import static com.acme.verein.security.Rolle.ACTUATOR;
 import static com.acme.verein.security.Rolle.ADMIN;
-import static com.acme.verein.security.Rolle.KUNDE;
+import static com.acme.verein.security.Rolle.VEREIN;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 /**
@@ -91,11 +91,11 @@ interface SecurityConfig {
         final var users = List.of(
             User.withUsername("admin")
                 .password(password)
-                .roles(ADMIN.name(), KUNDE.name(), ACTUATOR.name())
+                .roles(ADMIN.name(), VEREIN.name(), ACTUATOR.name())
                 .build(),
             User.withUsername("alpha")
                 .password(password)
-                .roles(KUNDE.name())
+                .roles(VEREIN.name())
                 .build()
         );
 

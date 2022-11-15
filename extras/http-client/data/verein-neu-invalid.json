@@ -1,21 +1,13 @@
 {
-    "nachname": "?!:",
+    "name": "?!:",
     "email": "email",
-    "kategorie" : 11,
-    "hasNewsletter": true,
-    "geburtsdatum": "3000-01-01",
+    "gruendungsdatum": "3000-01-01",
     "umsatz": {
         "betrag": 0,
         "waehrung": "EUR"
     },
     "homepage": "https://www.test.de",
-    "geschlecht": "W",
-    "familienstand": "L",
-    "interessen": [
-        "R",
-        "L",
-        "L"
-    ],
+
     "adresse": {
         "plz": "1",
         "ort": ""
