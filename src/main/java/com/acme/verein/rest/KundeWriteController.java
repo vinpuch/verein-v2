@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2022 - present Juergen Zimmermann, Hochschule Karlsruhe
  *
@@ -16,12 +17,12 @@
  */
 package com.acme.verein.rest;
 
-//import com.acme.verein.service.VereinReadService;
 
 import com.acme.verein.service.ConstraintViolationsException;
 import com.acme.verein.service.EmailExistsException;
-import com.acme.verein.service.NotFoundException;
+import com.acme.verein.service.VereinReadService;
 import com.acme.verein.service.VereinWriteService;
+import com.acme.verein.service.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,47 +44,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.acme.verein.rest.VereinGetController.ID_PATTERN;
 import static com.acme.verein.rest.UriHelper.getBaseUri;
 import static com.acme.verein.rest.UriHelper.getRequestUri;
-import static com.acme.verein.rest.VereinGetController.ID_PATTERN;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.notFound;
-import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 /**
  * Eine `@RestController`-Klasse bildet die REST-Schnittstelle, wobei die HTTP-Methoden, Pfade und MIME-Typen auf die
- * Funktionen der Klasse abgebildet werden.
- * ![Klassendiagramm](../../../images/KundeWriteController.svg)
+ * Methoden der Klasse abgebildet werden.
+ * <img src="../../../../../asciidoc/VereinWriteController.svg" alt="Klassendiagramm">
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
- * @null
  */
 @RestController
 @RequestMapping("/")
-@Tag(name = "Kunde API")
+@Tag(name = "Verein API")
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("ClassFanOutComplexity")
-final class KundeWriteController {
+final class VereinWriteController {
     @SuppressWarnings("TrailingComment")
     private static final String PROBLEM_PATH = "/problem/"; //NOSONAR
 
     private final VereinWriteService service;
-    // private final VereinReadService readService;
-
+    private final VereinReadService readService;
+    private final VereinPatcher patcher;
 
     /**
      * Einen neuen Verein-Datensatz anlegen.
      *
-     * @param vereinDTO Das Vereinnobjekt aus dem eingegangenen Request-Body.
+     * @param vereinDTO Das Vereinobjekt aus dem eingegangenen Request-Body.
      * @param request Das Request-Objekt, um `Location` im Response-Header zu erstellen.
      * @return Response mit Statuscode 201 einschließlich Location-Header oder Statuscode 422 falls Constraints verletzt
      *      sind oder die Emailadresse bereits existiert oder Statuscode 400 falls syntaktische Fehler im Request-Body
@@ -89,7 +90,7 @@ final class KundeWriteController {
      * @throws URISyntaxException falls die URI im Request-Objekt nicht korrekt wäre
      */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "Einen neuen Vereine anlegen", tags = "Neuanlegen")
+    @Operation(summary = "Einen neuen Verein anlegen", tags = "Neuanlegen")
     @ApiResponse(responseCode = "201", description = "Verein neu angelegt")
     @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
     @ApiResponse(responseCode = "422", description = "Ungültige Werte oder Email vorhanden")
@@ -109,14 +110,14 @@ final class KundeWriteController {
     /**
      * Einen vorhandenen Verein-Datensatz überschreiben.
      *
-     * @param id ID des zu aktualisierenden Vereine.
-     * @param vereinDTO Das Vereinnobjekt aus dem eingegangenen Request-Body.
+     * @param id ID der zu aktualisierenden Verein.
+     * @param vereinDTO Das Vereinobjekt aus dem eingegangenen Request-Body.
      * @return Response mit Statuscode 204 oder Statuscode 422, falls Constraints verletzt sind oder
      *      der JSON-Datensatz syntaktisch nicht korrekt ist oder falls die Emailadresse bereits existiert oder
      *      Statuscode 400 falls syntaktische Fehler im Request-Body vorliegen.
      */
     @PutMapping(path = "{id:" + ID_PATTERN + "}", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "Einen Vereine mit neuen Werten aktualisieren", tags = "Aktualisieren")
+    @Operation(summary = "Eine Verein mit neuen Werten aktualisieren", tags = "Aktualisieren")
     @ApiResponse(responseCode = "204", description = "Aktualisiert")
     @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
     @ApiResponse(responseCode = "404", description = "Verein nicht vorhanden")
@@ -127,6 +128,48 @@ final class KundeWriteController {
     ) {
         log.debug("update: id={}, {}", id, vereinDTO);
         service.update(vereinDTO.toVerein(), id);
+        return noContent().build();
+    }
+
+    /**
+     * Einen vorhandenen Verein-Datensatz durch PATCH aktualisieren.
+     *
+     * @param id ID der zu aktualisierenden Verein.
+     * @param operations Die Collection der Patch-Operationen
+     * @return Response mit Statuscode 204 oder 422, falls Constraints verletzt sind oder
+     *      der JSON-Datensatz syntaktisch nicht korrekt ist oder falls die Emailadresse bereits existiert oder 400
+     *      falls syntaktische Fehler vorliegen.
+     */
+    @PatchMapping(path = "{id:" + ID_PATTERN + "}", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Eine Verein mit einzelnen neuen Werten aktualisieren", tags = "Aktualisieren")
+    @ApiResponse(responseCode = "204", description = "Aktualisiert")
+    @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
+    @ApiResponse(responseCode = "404", description = "Verein nicht vorhanden")
+    @ApiResponse(responseCode = "422", description = "Constraints verletzt oder Email vorhanden")
+    ResponseEntity<Void> patch(
+        @PathVariable final UUID id,
+        @RequestBody final Collection<PatchOperation> operations
+    ) {
+        log.debug("patch: id={}, operations={}", id, operations);
+        final var verein = readService.findById(id);
+        patcher.patch(verein, operations);
+        log.debug("patch: {}", verein);
+        service.update(verein, id);
+        return noContent().build();
+    }
+
+    /**
+     * Eine vorhandene Verein anhand seiner ID löschen.
+     *
+     * @param id ID der zu löschenden Verein.
+     * @return Response mit Statuscode 204.
+     */
+    @DeleteMapping(path = "{id:" + ID_PATTERN + "}")
+    @Operation(summary = "Eine Verein anhand der ID loeschen", tags = "Loeschen")
+    @ApiResponse(responseCode = "204", description = "Gelöscht")
+    ResponseEntity<Void> deleteById(@PathVariable final UUID id)  {
+        log.debug("deleteById: id={}", id);
+        service.deleteById(id);
         return noContent().build();
     }
 
@@ -155,23 +198,22 @@ final class KundeWriteController {
         }
 
         final var problemDetail = ProblemDetail.forStatusAndDetail(UNPROCESSABLE_ENTITY, detail);
-        problemDetail.setType(URI.create(PROBLEM_PATH));
+        problemDetail.setType(URI.create(PROBLEM_PATH + com.acme.verein.rest.ProblemType.CONSTRAINTS.getValue()));
         final var uri = getRequestUri(request);
         problemDetail.setInstance(uri);
 
-        return unprocessableEntity().body(problemDetail);
+        return ResponseEntity.of(problemDetail).build();
     }
-
 
     @ExceptionHandler(EmailExistsException.class)
     @SuppressWarnings("unused")
     ResponseEntity<ProblemDetail> handleEmailExists(final EmailExistsException ex, final HttpServletRequest request) {
         log.debug("handleEmailExists: {}", ex.getMessage());
         final var problemDetail = ProblemDetail.forStatusAndDetail(UNPROCESSABLE_ENTITY, ex.getMessage());
-        problemDetail.setType(URI.create(PROBLEM_PATH));
+        problemDetail.setType(URI.create(PROBLEM_PATH + com.acme.verein.rest.ProblemType.CONSTRAINTS.getValue()));
         final var uri = getRequestUri(request);
         problemDetail.setInstance(uri);
-        return unprocessableEntity().body(problemDetail);
+        return ResponseEntity.of(problemDetail).build();
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -182,10 +224,10 @@ final class KundeWriteController {
     ) {
         log.debug("handleMessageNotReadable: {}", ex.getMessage());
         final var problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
-        problemDetail.setType(URI.create(PROBLEM_PATH));
+        problemDetail.setType(URI.create(PROBLEM_PATH + com.acme.verein.rest.ProblemType.BAD_REQUEST.getValue()));
         final var uri = getRequestUri(request);
         problemDetail.setInstance(uri);
-        return badRequest().body(problemDetail);
+        return ResponseEntity.of(problemDetail).build();
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -194,5 +236,6 @@ final class KundeWriteController {
         log.debug("handleNotFound: {}", ex.getMessage());
         return notFound().build();
     }
+
 
 }
