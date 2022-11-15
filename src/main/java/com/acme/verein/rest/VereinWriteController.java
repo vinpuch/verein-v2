@@ -18,11 +18,8 @@
 package com.acme.verein.rest;
 
 
-import com.acme.verein.service.ConstraintViolationsException;
-import com.acme.verein.service.EmailExistsException;
+import com.acme.verein.service.*;
 //import com.acme.verein.service.VereinReadService;
-import com.acme.verein.service.VereinWriteService;
-import com.acme.verein.service.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,8 +46,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.acme.verein.rest.VereinGetController.ID_PATTERN;
-import static com.acme.verein.rest.UriHelper.getBaseUri;
-import static com.acme.verein.rest.UriHelper.getRequestUri;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -82,7 +78,6 @@ final class VereinWriteController {
      * Einen neuen Verein-Datensatz anlegen.
      *
      * @param vereinDTO Das Vereinobjekt aus dem eingegangenen Request-Body.
-     * @param request Das Request-Objekt, um `Location` im Response-Header zu erstellen.
      * @return Response mit Statuscode 201 einschließlich Location-Header oder Statuscode 422 falls Constraints verletzt
      *      sind oder die Emailadresse bereits existiert oder Statuscode 400 falls syntaktische Fehler im Request-Body
      *      vorliegen.
@@ -94,16 +89,14 @@ final class VereinWriteController {
     @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
     @ApiResponse(responseCode = "422", description = "Ungültige Werte oder Email vorhanden")
     @SuppressWarnings("TrailingComment")
-    ResponseEntity<Void> create(
-        @RequestBody final VereinDTO vereinDTO,
-        final HttpServletRequest request
+    void create(
+        @RequestBody final VereinDTO vereinDTO
     ) throws URISyntaxException {
         log.debug("create: {}", vereinDTO);
 
         final var verein = service.create(vereinDTO.toVerein());
-        final var baseUri = getBaseUri(request);
-        final var location = new URI(baseUri + "/" + verein.getId()); //NOSONAR
-        return created(location).build();
+
+        service.create(verein);
     }
 
     /**
@@ -173,8 +166,8 @@ final class VereinWriteController {
 
         final var problemDetail = ProblemDetail.forStatusAndDetail(UNPROCESSABLE_ENTITY, detail);
         problemDetail.setType(URI.create(PROBLEM_PATH + com.acme.verein.rest.ProblemType.CONSTRAINTS.getValue()));
-        final var uri = getRequestUri(request);
-        problemDetail.setInstance(uri);
+
+
 
         return ResponseEntity.of(problemDetail).build();
     }
@@ -185,8 +178,6 @@ final class VereinWriteController {
         log.debug("handleEmailExists: {}", ex.getMessage());
         final var problemDetail = ProblemDetail.forStatusAndDetail(UNPROCESSABLE_ENTITY, ex.getMessage());
         problemDetail.setType(URI.create(PROBLEM_PATH + com.acme.verein.rest.ProblemType.CONSTRAINTS.getValue()));
-        final var uri = getRequestUri(request);
-        problemDetail.setInstance(uri);
         return ResponseEntity.of(problemDetail).build();
     }
 
@@ -199,8 +190,6 @@ final class VereinWriteController {
         log.debug("handleMessageNotReadable: {}", ex.getMessage());
         final var problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
         problemDetail.setType(URI.create(PROBLEM_PATH + com.acme.verein.rest.ProblemType.BAD_REQUEST.getValue()));
-        final var uri = getRequestUri(request);
-        problemDetail.setInstance(uri);
         return ResponseEntity.of(problemDetail).build();
     }
 
