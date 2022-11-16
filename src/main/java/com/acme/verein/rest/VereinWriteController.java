@@ -16,9 +16,6 @@
  */
 package com.acme.verein.rest;
 
-//import com.acme.verein.rest.patch.InvalidPatchOperationException;
-//import com.acme.verein.rest.patch.KundePatcher;
-//import com.acme.verein.rest.patch.PatchOperation;
 import com.acme.verein.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +38,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.acme.verein.rest.VereinGetController.ID_PATTERN;
-import static com.acme.verein.rest.VereinGetController.REST_PATH;
+//import static com.acme.verein.rest.VereinGetController.REST_PATH;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.created;
@@ -65,8 +62,10 @@ final class VereinWriteController {
     private static final String PROBLEM_PATH = "/problem/"; //NOSONAR
 
     private final VereinWriteService service;
-    //private final VereinReadService readService;
-    //private final KundePatcher patcher;
+    /*
+    private final VereinReadService readService;
+    private final KundePatcher patcher;
+    */
 
     /**
      * Einen neuen Kunde-Datensatz anlegen.

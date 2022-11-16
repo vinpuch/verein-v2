@@ -126,7 +126,7 @@ public final class VereinRepository {
     }
 
     /**
-     * Einen vorhandenes Vereins aktualisieren.
+     * Einen vorhandenen Verein aktualisieren.
      *
      * @param verein Das Objekt mit den neuen Daten
      */

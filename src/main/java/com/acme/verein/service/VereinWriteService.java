@@ -17,8 +17,8 @@
 package com.acme.verein.service;
 
 import com.acme.verein.entity.Verein;
-import com.acme.verein.repository.VereinRepository;
 //import com.acme.verein.service.ConstraintViolationsException;
+import com.acme.verein.repository.VereinRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public final class VereinWriteService {
     private final Validator validator;
 
     /**
-     * Einen neues Verein anlegen.
+     * Einen neuen Verein anlegen.
      *
      * @param verein Das Objekt des neu anzulegenden Vereins.
      * @return Das neu angelegte Verein mit generierter ID.
@@ -64,7 +64,7 @@ public final class VereinWriteService {
     }
 
     /**
-     * Einen vorhandenes Verein aktualisieren.
+     * Einen vorhandenen Verein aktualisieren.
      *
      * @param verein Das Objekt mit den neuen Daten (ohne ID)
      * @param id ID des zu aktualisierenden Vereins
