@@ -1,7 +1,6 @@
 {
     "name": "Alphaput",
     "email": "alpha@acme.de.put",
-    "hasNewsletter": true,
     "gruendungsdatum": "2022-01-03",
     "umsatz": {
         "betrag": 30,

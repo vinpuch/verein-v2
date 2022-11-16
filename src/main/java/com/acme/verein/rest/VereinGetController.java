@@ -83,7 +83,6 @@ final class VereinGetController {
         final var verein = service.findById(id);
         log.debug("findByID: {}", verein);
 
-        // nochmal korrigieren
         return verein;
     }
 

@@ -18,18 +18,18 @@ package com.acme.verein.service;
 
 import com.acme.verein.entity.Verein;
 import com.acme.verein.repository.VereinRepository;
+//import com.acme.verein.service.ConstraintViolationsException;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Anwendungslogik für Vereine auch mit Bean Validation.
- * ![Klassendiagramm](../../../images/VereinWriteService.svg)
+ * ![Klassendiagramm](../../../images/KundeWriteService.svg)
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
@@ -43,12 +43,11 @@ public final class VereinWriteService {
     private final Validator validator;
 
     /**
-     * Einen neuen Verein anlegen.
+     * Einen neues Verein anlegen.
      *
-     * @param verein Das Objekt des neu anzulegenden Verein.
-     * @return Der neu angelegte Verein mit generierter ID
-     * @throws com.acme.verein.service.ConstraintViolationsException Falls mindestens ein Constraint verletzt ist.
-     * @throws com.acme.verein.service.EmailExistsException Es gibt bereits einen Verein mit der Emailadresse.
+     * @param verein Das Objekt des neu anzulegenden Vereins.
+     * @return Das neu angelegte Verein mit generierter ID.
+     * @throws ConstraintViolationsException Falls mindestens ein Constraint verletzt ist.
      */
     public Verein create(@Valid final Verein verein) {
         log.debug("create: {}", verein);
@@ -56,11 +55,7 @@ public final class VereinWriteService {
         final var violations = validator.validate(verein);
         if (!violations.isEmpty()) {
             log.debug("create: violations={}", violations);
-            throw new com.acme.verein.service.ConstraintViolationsException(violations);
-        }
-
-        if (repo.isEmailExisting(verein.getEmail())) {
-            throw new com.acme.verein.service.EmailExistsException(verein.getEmail());
+            throw new ConstraintViolationsException(violations);
         }
 
         final var vereinDB = repo.create(verein);
@@ -69,13 +64,12 @@ public final class VereinWriteService {
     }
 
     /**
-     * Einen vorhandenen Verein aktualisieren.
+     * Einen vorhandenes Verein aktualisieren.
      *
      * @param verein Das Objekt mit den neuen Daten (ohne ID)
      * @param id ID des zu aktualisierenden Vereins
-     * @throws com.acme.verein.service.ConstraintViolationsException Falls mindestens ein Constraint verletzt ist.
-     * @throws NotFoundException Kein Verein zur ID vorhanden.
-     * @throws com.acme.verein.service.EmailExistsException Es gibt bereits einen Verein mit der Emailadresse.
+     * @throws ConstraintViolationsException Falls mindestens ein Constraint verletzt ist.
+     * @throws NotFoundException Kein Kunde zur ID vorhanden.
      */
     public void update(final Verein verein, final UUID id) {
         log.debug("update: {}", verein);
@@ -84,7 +78,7 @@ public final class VereinWriteService {
         final var violations = validator.validate(verein);
         if (!violations.isEmpty()) {
             log.debug("update: violations={}", violations);
-            throw new com.acme.verein.service.ConstraintViolationsException(violations);
+            throw new ConstraintViolationsException(violations);
         }
 
         final var vereinDbOptional = repo.findById(id);
@@ -92,25 +86,7 @@ public final class VereinWriteService {
             throw new NotFoundException(id);
         }
 
-        final var email = verein.getEmail();
-        final var vereinDb = vereinDbOptional.get();
-        // Ist die neue Email bei einem *ANDEREN* Verein vorhanden?
-        if (!Objects.equals(email, vereinDb.getEmail()) && repo.isEmailExisting(email)) {
-            log.debug("update: email {} existiert", email);
-            throw new com.acme.verein.service.EmailExistsException(email);
-        }
-
         verein.setId(id);
         repo.update(verein);
-    }
-
-    /**
-     * Einen vorhandenen Verein löschen.
-     *
-     * @param id Die ID des zu löschenden Vereins.
-     */
-    public void deleteById(final UUID id) {
-        log.debug("deleteById: id={}", id);
-        repo.deleteById(id);
     }
 }

@@ -20,14 +20,7 @@ import com.acme.verein.entity.Verein;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import static java.util.UUID.randomUUID;
 
-/*
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalInt;
-*/
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -38,13 +31,10 @@ import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-/*
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-*/
 
 import static com.acme.verein.repository.DB.VEREINE;
-//import static java.util.UUID.randomUUID;
+import static java.util.UUID.randomUUID;
+// import static java.util.UUID.randomUUID;
 
 /**
  * Repository für den DB-Zugriff bei Verein.
@@ -56,11 +46,10 @@ import static com.acme.verein.repository.DB.VEREINE;
 @SuppressWarnings("PublicConstructor")
 public final class VereinRepository {
     /**
-     * Einen Verein anhand seiner ID suchen.
+     * Ein Verein anhand seiner ID suchen.
      *
      * @param id Die Id des gesuchten Vereins
-     *
-     * @return Optional mit dem gefundenen Vereis oder leeres Optional
+     * @return Optional mit dem gefundenen Verein oder leeres Optional
      */
     public Optional<Verein> findById(final UUID id) {
         log.debug("findById: id={}", id);
@@ -70,39 +59,74 @@ public final class VereinRepository {
         log.debug("findById: {}", result);
         return result;
     }
+
     /**
-     * Abfrage, ob es einen Verein mit gegebener Emailadresse gibt.
+     * Vereine anhand von Suchkriterien ermitteln.
+     * Z.B. mit GET https://localhost:8080/api?name=A&amp;plz=7
      *
-     * @param email Emailadresse für die Suche
-     * @return true, falls es einen solchen Verein gibt, sonst false
+     * @param suchkriterien Suchkriterien.
+     * @return Gefundene Vereine.
      */
-    public boolean isEmailExisting(final String email) {
-        log.debug("isEmailExisting: email={}", email);
-        final var count = VEREINE.stream()
-            .filter(verein -> Objects.equals(verein.getEmail(), email))
-            .count();
-        log.debug("isEmailExisting: count={}", count);
-        return count > 0L;
+    @SuppressWarnings({"ReturnCount", "JavadocLinkAsPlainText"})
+    public @NonNull Collection<Verein> find(final Map<String, String> suchkriterien) {
+        log.debug("find: suchkriterien={}", suchkriterien);
+
+        if (suchkriterien.isEmpty()) {
+            return findAll();
+        }
+
+        // for-Schleife statt Higher-order Function "forEach" wegen return
+        for (final var entry : suchkriterien.entrySet()) {
+            if (entry.getKey().equals("name")) {
+                return findByName(entry.getValue());
+            } else {
+                log.debug("find: ungueltiges Suchkriterium={}", entry.getKey());
+            }
+        }
+
+        return Collections.emptyList();
     }
 
     /**
-     * E-Mail wird gesucht.
+     * Alle Vereine als Collection ermitteln, wie sie später auch von der DB kommen.
      *
-     * @param email des gesuchten Vereins
-     *
-     * @return Optional mit dem gefundenen Vereis oder leeres Optional
+     * @return Alle Vereine
      */
-    public Optional<Verein> findByEmail(final String email) {
-        log.debug("findByEmail: {}", email);
-        final var result = VEREINE.stream()
-            .filter(verein -> Objects.equals(verein.getEmail(), email))
-            .findFirst();
-        log.debug("findByEmail: {}", result);
-        return result;
+    public @NonNull List<Verein> findAll() {
+        return VEREINE;
     }
 
     /**
-     * Einen vorhandenen Kunden aktualisieren.
+     * Vereine anhand des namens suchen.
+     *
+     * @param name Der (Teil-) Name der gesuchten Vereine
+     * @return Die gefundenen Vereine oder eine leere Collection
+     */
+    public @NonNull Collection<Verein> findByName(final CharSequence name) {
+        log.debug("findByName: name={}", name);
+        final var vereine = VEREINE.stream()
+            .filter(verein -> verein.getName().contains(name))
+            .collect(Collectors.toList());
+        log.debug("findByName: vereine={}", vereine);
+        return vereine;
+    }
+
+    /**
+     * Einen neuen Verein anlegen.
+     *
+     * @param verein Das Objekt des neu anzulegenden Vereins.
+     * @return Das neu angelegte Verein mit generierter ID.
+     */
+    public @NonNull Verein create(final @NonNull Verein verein) {
+        log.debug("create: {}", verein);
+        verein.setId(randomUUID());
+        VEREINE.add(verein);
+        log.debug("create: {}", verein);
+        return verein;
+    }
+
+    /**
+     * Einen vorhandenes Vereins aktualisieren.
      *
      * @param verein Das Objekt mit den neuen Daten
      */
@@ -119,93 +143,13 @@ public final class VereinRepository {
         VEREINE.set(index.getAsInt(), verein);
         log.debug("update: {}", verein);
     }
-    /**
-     * Einen neuen Verein anlegen.
-     *
-     * @param verein Das Objekt des neu anzulegenden Kunden.
-     * @return Der neu angelegte Verein mit generierter ID und kleingeschriebener Emailadresse
-     */
-    public @NonNull Verein create(final @NonNull Verein verein) {
-        log.debug("create: {}", verein);
-        verein.setId(randomUUID());
-        VEREINE.add(verein);
-        log.debug("create: {}", verein);
-        return verein;
-    }
 
-    /**
-     * Einen vorhandenen Verein löschen.
-     *
-     * @param id Die ID des zu löschenden Vereins.
-     */
-    public void deleteById(final UUID id) {
-        log.debug("deleteById: id={}", id);
-        final OptionalInt index = IntStream
-            .range(0, VEREINE.size())
-            .filter(i -> Objects.equals(VEREINE.get(i).getId(), id))
+    public Optional<Verein> findByEmail(final String email) {
+        log.debug("findByEmail: {}", email);
+        final var result = VEREINE.stream()
+            .filter(verein -> Objects.equals(verein.getEmail(), email))
             .findFirst();
-        log.trace("deleteById: index={}", index);
-        index.ifPresent(VEREINE::remove);
-        log.debug("deleteById: #KUNDEN={}", VEREINE.size());
-    }
-    /**
-     * Name wird gesucht.
-     *
-     * @param name des gesuchten Vereins
-     *
-     * @return Collection mit dem gefundenen Vereinen
-     */
-    public @NonNull Collection<Verein> findByName(final CharSequence name) {
-        log.debug("findByname: name={}", name);
-        final var vereine = VEREINE.stream()
-            .filter(verein -> verein.getName().contains(name))
-            .collect(Collectors.toList());
-        log.debug("findByName: vereine={}", vereine);
-        return vereine;
-    }
-
-
-    /**
-     * Alle Vereine als Collection ermitteln, wie sie später auch von der DB kommen.
-     *
-     * @return gibt alle Vereine zurück
-     */
-    public @NonNull Collection<Verein> findAll() {
-        return VEREINE;
-    }
-
-
-    /**
-     * Vereine anhand von Suchkriterien ermitteln.
-     * Z.B. mit GET https://localhost:8080/api?name=A&amp;plz=7
-     *
-     *  @param suchkriterien Suchkriterien.
-     *
-     * @return Gefundene Vereine.
-     */
-    @SuppressWarnings({"ReturnCount", "JavadocLinkAsPlainText"})
-    public @NonNull Collection<Verein> find(final Map<String, String> suchkriterien) {
-        log.debug("find: suchkriterien={}", suchkriterien);
-
-        if (suchkriterien.isEmpty()) {
-            return findAll();
-        }
-
-        // for-Schleife statt Higher-order Function "forEach" wegen return
-        for (final var entry : suchkriterien.entrySet()) {
-            switch (entry.getKey()) {
-                case "email" -> {
-                    final var result = findByEmail(entry.getValue());
-                    //noinspection OptionalIsPresent
-                    return result.isPresent() ? List.of(result.get()) : Collections.emptyList();
-                }
-                case "name" -> {
-                    return findByName(entry.getValue());
-                }
-                default -> log.debug("find: ungueltiges Suchkriterium={}", entry.getKey());
-            }
-        }
-
-        return Collections.emptyList();
+        log.debug("findByEmail: {}", result);
+        return result;
     }
 }
