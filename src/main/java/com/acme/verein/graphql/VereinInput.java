@@ -19,19 +19,20 @@ package com.acme.verein.graphql;
 import com.acme.verein.entity.Adresse;
 import com.acme.verein.entity.Verein;
 import com.acme.verein.entity.Umsatz;
+
 import java.net.URL;
 import java.time.LocalDate;
 
 /**
  * Eine Value-Klasse für Eingabedaten passend zu VereinInput aus dem GraphQL-Schema.
  *
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
- * @param name Name
- * @param email Emailadresse
+ * @param name            Name
+ * @param email           Emailadresse
  * @param gruendungsdatum Gruendungsdatum
- * @param homepage URL der Homepage
- * @param umsatz Umsatz
- * @param adresse Adresse
+ * @param homepage        URL der Homepage
+ * @param umsatz          Umsatz
+ * @param adresse         Adresse
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @SuppressWarnings("RecordComponentNumber")
 record VereinInput(

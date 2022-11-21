@@ -22,10 +22,9 @@ import java.util.Currency;
 /**
  * Geldbetrag und Währungseinheit für eine Umsatzangabe.
  *
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
- *
- * @param betrag Der Betrag als unveränderliches Pflichtfeld.
+ * @param betrag   Der Betrag als unveränderliches Pflichtfeld.
  * @param waehrung Die Währungseinheit als unveränderliches Pflichtfeld.
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 record UmsatzInput(BigDecimal betrag, Currency waehrung) {
 }

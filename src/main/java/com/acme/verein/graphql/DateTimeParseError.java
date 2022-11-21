@@ -19,6 +19,7 @@ package com.acme.verein.graphql;
 import graphql.GraphQLError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.execution.ErrorType;
+
 import static org.springframework.graphql.execution.ErrorType.BAD_REQUEST;
 
 /**

@@ -22,10 +22,9 @@ import java.util.Map;
 /**
  * Eine Value-Klasse für Eingabedaten passend zu Suchkriterien aus dem GraphQL-Schema.
  *
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
- *
- * @param name Name
+ * @param name  Name
  * @param email Emailadresse
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 record Suchkriterien(
     String name,
@@ -37,8 +36,7 @@ record Suchkriterien(
      * @return Das konvertierte Map-Objekt
      */
     Map<String, String> toMap() {
-        @SuppressWarnings("TypeMayBeWeakened")
-        final var map = new HashMap<String, String>(2, 1);
+        @SuppressWarnings("TypeMayBeWeakened") final var map = new HashMap<String, String>(2, 1);
         if (name != null) {
             map.put("name", name);
         }

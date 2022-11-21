@@ -21,10 +21,13 @@ import graphql.GraphQLError;
 import graphql.language.SourceLocation;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path.Node;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.execution.ErrorType;
+
 import static org.springframework.graphql.execution.ErrorType.BAD_REQUEST;
 
 /**

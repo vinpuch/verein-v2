@@ -21,9 +21,8 @@ import java.util.UUID;
 /**
  * Value-Klasse für das Resultat, wenn an der GraphQL-Schnittstelle ein neuer Verein angelegt wurde.
  *
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
- *
  * @param id ID des neu angelegten vereine
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 record CreatePayload(UUID id) {
 }

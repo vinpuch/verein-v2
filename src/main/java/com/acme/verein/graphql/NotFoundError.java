@@ -18,11 +18,14 @@ package com.acme.verein.graphql;
 
 import graphql.GraphQLError;
 import graphql.language.SourceLocation;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.execution.ErrorType;
+
 import static org.springframework.graphql.execution.ErrorType.NOT_FOUND;
 
 /**

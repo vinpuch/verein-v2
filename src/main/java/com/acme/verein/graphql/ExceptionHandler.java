@@ -21,9 +21,11 @@ import com.acme.verein.service.EmailExistsException;
 import com.acme.verein.service.NotFoundException;
 import graphql.GraphQLError;
 import graphql.schema.DataFetchingEnvironment;
+
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +39,7 @@ final class ExceptionHandler extends DataFetcherExceptionResolverAdapter {
     /**
      * Abbildung der Exceptions auf GraphQLError.
      *
-     * @param ex Exception aus dem Anwendungskern
+     * @param ex  Exception aus dem Anwendungskern
      * @param env Environment-Objekt
      */
     @Override
@@ -48,27 +50,26 @@ final class ExceptionHandler extends DataFetcherExceptionResolverAdapter {
     ) {
 
 
-
-         switch (ex) {
-             case final NotFoundException notFound -> {
-                 return new NotFoundError(notFound.getId(), notFound.getSuchkriterien());
-             }
-             case final EmailExistsException emailExists -> {
-                 return new EmailExistsError(emailExists.getEmail());
-             }
-             case final DateTimeParseException dateTimeParse -> {
-                 return new DateTimeParseError(dateTimeParse.getParsedString());
-             }
-             default -> {
-                 return super.resolveToSingleError(ex, env);
-             }
-         }
+        switch (ex) {
+            case final NotFoundException notFound -> {
+                return new NotFoundError(notFound.getId(), notFound.getSuchkriterien());
+            }
+            case final EmailExistsException emailExists -> {
+                return new EmailExistsError(emailExists.getEmail());
+            }
+            case final DateTimeParseException dateTimeParse -> {
+                return new DateTimeParseError(dateTimeParse.getParsedString());
+            }
+            default -> {
+                return super.resolveToSingleError(ex, env);
+            }
+        }
     }
 
     /**
      * Abbildung der Exceptions aus VereinGraphQlController auf GraphQLError.
      *
-     * @param ex Exception aus VereinGraphQlController
+     * @param ex  Exception aus VereinGraphQlController
      * @param env Environment-Objekt
      */
     @Override
