@@ -23,13 +23,8 @@ query {
   verein(id: "00000000-0000-0000-0000-000000000001") {
     name
     email
-    kategorie
-    hasNewsletter
-    geburtsdatum
+    gruendungsdatum
     homepage
-    geschlecht
-    familienstand
-    interessen
     umsatz {
       betrag
       waehrung
@@ -47,14 +42,9 @@ GRAPHQL {{baseUrl}}/graphql
 query {
   vereine {
     id
-    nachname
-    kategorie
-    hasNewsletter
-    geburtsdatum
+    name
+    gruendungsdatum
     homepage
-    geschlecht
-    familienstand
-    interessen
     umsatz {
       betrag
       waehrung
@@ -72,14 +62,9 @@ GRAPHQL {{baseUrl}}/graphql
 query {
   vereine(input: {email: "admin@acme.com"}) {
     id
-    nachname
-    kategorie
-    hasNewsletter
-    geburtsdatum
+    name
+    gruendungsdatum
     homepage
-    geschlecht
-    familienstand
-    interessen
     umsatz {
       betrag
       waehrung
@@ -100,21 +85,16 @@ query {
   }
 }
 
-### Suche Vereine mit dem Nachnamen als admin
+### Suche Vereine mit dem namen als admin
 GRAPHQL {{baseUrl}}/graphql
 
 query {
-  vereine(input: {nachname: "a"}) {
+  vereine(input: {name: "a"}) {
     id
-    nachname
+    name
     email
-    kategorie
-    hasNewsletter
-    geburtsdatum
+    gruendungsdatum
     homepage
-    geschlecht
-    familienstand
-    interessen
     umsatz {
       betrag
       waehrung
@@ -125,11 +105,11 @@ query {
     }
   }
 }
-### Suche Vereine mit nicht-vorhandenem Nachnamen als admin
+### Suche Vereine mit nicht-vorhandenem namen als admin
 GRAPHQL {{baseUrl}}/graphql
 
 query {
-  vereine(input: {nachname: "Nichtvorhanden"}) {
+  vereine(input: {name: "Nichtvorhanden"}) {
     id
   }
 }
