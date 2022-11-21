@@ -210,7 +210,7 @@ final class VereinWriteController {
     void onNotFound(final NotFoundException ex) {
         log.debug("onNotFound: {}", ex.getMessage());
     }
-    
+
     /*
     @ExceptionHandler(InvalidPatchOperationException.class)
     @SuppressWarnings("unused")
