@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
 import java.util.UUID;
 
 /**
- * Value-Klasse für das Resultat, wenn an der GraphQL-Schnittstelle ein neuer Kunde angelegt wurde.
+ * Value-Klasse für das Resultat, wenn an der GraphQL-Schnittstelle ein neuer Verein angelegt wurde.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  *
- * @param id ID des neu angelegten Kunden
+ * @param id ID des neu angelegten vereine
  */
 record CreatePayload(UUID id) {
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
 import graphql.GraphQLError;
 import graphql.language.SourceLocation;
@@ -54,12 +54,12 @@ class NotFoundError implements GraphQLError {
     @Override
     public String getMessage() {
         return id == null
-            ? "Kein Kunde gefunden: suchkriterien=" + suchkriterien
-            : "Kein Kunde mit der ID " + id + " gefunden";
+            ? "Kein Verein gefunden: suchkriterien=" + suchkriterien
+            : "Kein Verein mit der ID " + id + " gefunden";
     }
 
     /**
-     * Keine Angabe von Zeilen- und Spaltennummer der GraphQL-Query, falls kein Kunde gefunden wurde.
+     * Keine Angabe von Zeilen- und Spaltennummer der GraphQL-Query, falls kein Verein gefunden wurde.
      *
      * @return null.
      */

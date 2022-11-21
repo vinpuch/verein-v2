@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
-import com.acme.kunde.entity.Kunde;
+import com.acme.verein.entity.Verein;
 import graphql.GraphQLError;
 import graphql.language.SourceLocation;
 import jakarta.validation.ConstraintViolation;
@@ -36,7 +36,7 @@ import static org.springframework.graphql.execution.ErrorType.BAD_REQUEST;
 @RequiredArgsConstructor
 @SuppressWarnings("SerializableDeserializableClassInSecureContext")
 final class ConstraintViolationError implements GraphQLError {
-    private final ConstraintViolation<Kunde> violation;
+    private final ConstraintViolation<Verein> violation;
 
     /**
      * ErrorType auf BAD_REQUEST setzen.

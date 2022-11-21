@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
-import com.acme.kunde.entity.Adresse;
-import com.acme.kunde.entity.FamilienstandType;
-import com.acme.kunde.entity.GeschlechtType;
-import com.acme.kunde.entity.InteresseType;
-import com.acme.kunde.entity.Kunde;
-import com.acme.kunde.entity.Umsatz;
+import com.acme.verein.entity.Adresse;
+import com.acme.verein.entity.FamilienstandType;
+import com.acme.verein.entity.GeschlechtType;
+import com.acme.verein.entity.InteresseType;
+import com.acme.verein.entity.Verein;
+import com.acme.verein.entity.Umsatz;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Eine Value-Klasse für Eingabedaten passend zu KundeInput aus dem GraphQL-Schema.
+ * Eine Value-Klasse für Eingabedaten passend zu VereinInput aus dem GraphQL-Schema.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  * @param nachname Nachname
@@ -43,25 +43,22 @@ import java.util.List;
  * @param adresse Adresse
  */
 @SuppressWarnings("RecordComponentNumber")
-record KundeInput(
+record VereinInput(
     String nachname,
     String email,
     int kategorie,
     boolean hasNewsletter,
     String geburtsdatum,
     URL homepage,
-    GeschlechtType geschlecht,
-    FamilienstandType familienstand,
-    List<InteresseType> interessen,
     UmsatzInput umsatz,
     AdresseInput adresse
 ) {
     /**
-     * Konvertierung in ein Objekt der Entity-Klasse Kunde.
+     * Konvertierung in ein Objekt der Entity-Klasse Verein.
      *
-     * @return Das konvertierte Kunde-Objekt
+     * @return Das konvertierte Verein-Objekt
      */
-    Kunde toKunde() {
+    Verein toVerein() {
         final LocalDate geburtsdatumTmp;
         geburtsdatumTmp = LocalDate.parse(geburtsdatum);
         Umsatz umsatzTmp = null;
@@ -70,7 +67,7 @@ record KundeInput(
         }
         final var adresseTmp = Adresse.builder().plz(adresse.plz()).ort(adresse.ort()).build();
 
-        return Kunde
+        return Verein
             .builder()
             .id(null)
             .nachname(nachname)

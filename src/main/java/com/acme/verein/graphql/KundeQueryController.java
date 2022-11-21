@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
-import com.acme.kunde.entity.Kunde;
-import com.acme.kunde.service.KundeReadService;
+import com.acme.verein.entity.Verein;
+import com.acme.verein.service.VereinReadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -35,34 +35,34 @@ import java.util.UUID;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-final class KundeQueryController {
-    private final KundeReadService service;
+final class VereinQueryController {
+    private final VereinReadService service;
 
     /**
-     * Suche anhand der Kunde-ID.
+     * Suche anhand der Verein-ID.
      *
-     * @param id ID des zu suchenden Kunden
-     * @return Der gefundene Kunde
+     * @param id ID des zu suchenden vereine
+     * @return Der gefundene Verein
      */
     @QueryMapping
-    Kunde kunde(@Argument final UUID id) {
-        log.debug("kunde: id={}", id);
-        final var kunde = service.findById(id);
-        log.debug("kunde: {}", kunde);
-        return kunde;
+    Verein verein(@Argument final UUID id) {
+        log.debug("verein: id={}", id);
+        final var verein = service.findById(id);
+        log.debug("verein: {}", verein);
+        return verein;
     }
 
     /**
      * Suche mit diversen Suchkriterien.
      *
      * @param input Suchkriterien und ihre Werte, z.B. `nachname` und `Alpha`
-     * @return Die gefundenen Kunden als Collection
+     * @return Die gefundenen vereine als Collection
      */
     @QueryMapping
-    Collection<Kunde> kunden(@Argument final Suchkriterien input) {
-        log.debug("kunden: suchkriterien={}", input);
-        final var kunden = service.find(input.toMap());
-        log.debug("kunden: {}", kunden);
-        return kunden;
+    Collection<Verein> vereine(@Argument final Suchkriterien input) {
+        log.debug("vereine: suchkriterien={}", input);
+        final var vereine = service.find(input.toMap());
+        log.debug("vereine: {}", vereine);
+        return vereine;
     }
 }

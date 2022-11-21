@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
-import com.acme.kunde.service.ConstraintViolationsException;
-import com.acme.kunde.service.EmailExistsException;
-import com.acme.kunde.service.NotFoundException;
+import com.acme.verein.service.ConstraintViolationsException;
+import com.acme.verein.service.EmailExistsException;
+import com.acme.verein.service.NotFoundException;
 import graphql.GraphQLError;
 import graphql.schema.DataFetchingEnvironment;
 import java.time.format.DateTimeParseException;
@@ -75,9 +75,9 @@ final class ExceptionHandler extends DataFetcherExceptionResolverAdapter {
     }
 
     /**
-     * Abbildung der Exceptions aus KundeGraphQlController auf GraphQLError.
+     * Abbildung der Exceptions aus VereinGraphQlController auf GraphQLError.
      *
-     * @param ex Exception aus KundeGraphQlController
+     * @param ex Exception aus VereinGraphQlController
      * @param env Environment-Objekt
      */
     @Override

@@ -16,6 +16,6 @@
  */
 
 /**
- * GraphQL-Schnittstelle für Kunden.
+ * GraphQL-Schnittstelle für vereine.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;

@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.acme.kunde.graphql;
+package com.acme.verein.graphql;
 
-import com.acme.kunde.service.KundeWriteService;
+import com.acme.verein.service.VereinWriteService;
+import com.acme.verein.service.VereinWriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -31,19 +32,19 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-final class KundeMutationController {
-    private final KundeWriteService service;
+final class VereinMutationController {
+    private final VereinWriteService service;
 
     /**
-     * Einen neuen Kunden anlegen.
+     * Einen neuen vereine anlegen.
      *
-     * @param input Die Eingabedaten für einen neuen Kunden
-     * @return Die generierte ID für den neuen Kunden als Payload
+     * @param input Die Eingabedaten für einen neuen vereine
+     * @return Die generierte ID für den neuen vereine als Payload
      */
     @MutationMapping
-    CreatePayload create(@Argument final KundeInput input) {
+    CreatePayload create(@Argument final VereinInput input) {
         log.debug("create: input={}", input);
-        final var id = service.create(input.toKunde()).getId();
+        final var id = service.create(input.toVerein()).getId();
         log.debug("create: id={}", id);
         return new CreatePayload(id);
     }
