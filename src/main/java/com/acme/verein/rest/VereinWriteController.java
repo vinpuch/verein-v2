@@ -16,7 +16,9 @@
  */
 package com.acme.verein.rest;
 
-import com.acme.verein.service.*;
+import com.acme.verein.service.ConstraintViolationsException;
+import com.acme.verein.service.NotFoundException;
+import com.acme.verein.service.VereinWriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 //import java.net.URISyntaxException;
@@ -39,7 +48,10 @@ import java.util.stream.Collectors;
 
 import static com.acme.verein.rest.VereinGetController.ID_PATTERN;
 //import static com.acme.verein.rest.VereinGetController.REST_PATH;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.created;
 //import static org.springframework.http.ResponseEntity.*;
@@ -71,6 +83,8 @@ final class VereinWriteController {
      * Einen neuen Kunde-Datensatz anlegen.
      *
      * @param vereinDTO Das Vereinobjekt aus dem eingegangenen Request-Body.
+     * @param request wartet auf ServletRequest.
+     * @return URI dem eingegangenen Request-Body.
      */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(NO_CONTENT)
@@ -196,6 +210,7 @@ final class VereinWriteController {
     void onNotFound(final NotFoundException ex) {
         log.debug("onNotFound: {}", ex.getMessage());
     }
+    
     /*
     @ExceptionHandler(InvalidPatchOperationException.class)
     @SuppressWarnings("unused")

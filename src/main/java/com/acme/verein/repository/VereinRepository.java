@@ -144,6 +144,12 @@ public final class VereinRepository {
         log.debug("update: {}", verein);
     }
 
+    /**
+     * Findet E-Mail.
+     *
+     * @param email nach Emails filtern
+     * @return Die neu angelegten Vereine mit E-Mail
+     */
     public Optional<Verein> findByEmail(final String email) {
         log.debug("findByEmail: {}", email);
         final var result = VEREINE.stream()
