@@ -17,38 +17,27 @@
 package com.acme.verein.graphql;
 
 import com.acme.verein.entity.Adresse;
-import com.acme.verein.entity.FamilienstandType;
-import com.acme.verein.entity.GeschlechtType;
-import com.acme.verein.entity.InteresseType;
 import com.acme.verein.entity.Verein;
 import com.acme.verein.entity.Umsatz;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Eine Value-Klasse für Eingabedaten passend zu VereinInput aus dem GraphQL-Schema.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
- * @param nachname Nachname
+ * @param name Name
  * @param email Emailadresse
- * @param kategorie Kategorie
- * @param hasNewsletter Newsletter-Abonnement
- * @param geburtsdatum Geburtsdatum
+ * @param gruendungsdatum Gruendungsdatum
  * @param homepage URL der Homepage
- * @param geschlecht Geschlecht
- * @param familienstand Familienstand
- * @param interessen Interessen als Liste
  * @param umsatz Umsatz
  * @param adresse Adresse
  */
 @SuppressWarnings("RecordComponentNumber")
 record VereinInput(
-    String nachname,
+    String name,
     String email,
-    int kategorie,
-    boolean hasNewsletter,
-    String geburtsdatum,
+    String gruendungsdatum,
     URL homepage,
     UmsatzInput umsatz,
     AdresseInput adresse
@@ -59,8 +48,8 @@ record VereinInput(
      * @return Das konvertierte Verein-Objekt
      */
     Verein toVerein() {
-        final LocalDate geburtsdatumTmp;
-        geburtsdatumTmp = LocalDate.parse(geburtsdatum);
+        final LocalDate gruendungsdatumTmp;
+        gruendungsdatumTmp = LocalDate.parse(gruendungsdatum);
         Umsatz umsatzTmp = null;
         if (umsatz != null) {
             umsatzTmp = Umsatz.builder().betrag(umsatz.betrag()).waehrung(umsatz.waehrung()).build();
@@ -70,15 +59,10 @@ record VereinInput(
         return Verein
             .builder()
             .id(null)
-            .nachname(nachname)
+            .name(name)
             .email(email)
-            .kategorie(kategorie)
-            .hasNewsletter(hasNewsletter)
-            .geburtsdatum(geburtsdatumTmp)
+            .gruendungsdatum(gruendungsdatumTmp)
             .homepage(homepage)
-            .geschlecht(geschlecht)
-            .familienstand(familienstand)
-            .interessen(interessen)
             .umsatz(umsatzTmp)
             .adresse(adresseTmp)
             .build();

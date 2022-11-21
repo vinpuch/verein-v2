@@ -17,7 +17,6 @@
 package com.acme.verein.graphql;
 
 import com.acme.verein.service.VereinWriteService;
-import com.acme.verein.service.VereinWriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;

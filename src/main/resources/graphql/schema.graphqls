@@ -39,18 +39,13 @@ type Mutation {
 type Verein {
   "ID des Vereine"
   id: ID
-  "Nachname des Vereine"
-  nachname: String!
+  "Name des Vereine"
+  name: String!
   # https://www.graphql-scalars.dev/docs/scalars/email-address
   email: String!
-  kategorie: Int!
-  hasNewsletter: Boolean!
   # https://www.graphql-scalars.dev/docs/scalars/local-date
-  geburtsdatum: String
+  gruendungsdatum: String
   homepage: String
-  geschlecht: String
-  familienstand: String
-  interessen: [String!]
   umsatz: Umsatz
   adresse: Adresse!
 }
@@ -73,57 +68,27 @@ type Adresse {
 # https://spec.graphql.org/draft/#sec-Input-Objects
 "Suchkriterien für die Query 'vereine'"
 input Suchkriterien {
-  "Nachname der gesuchten Vereine"
-  nachname: String
+  "Name der gesuchten Vereine"
+  name: String
   "Emailadresse der gesuchten Vereine"
   email: String
 }
 
 "Eingabedaten für einen neuen Vereine"
 input VereinInput {
-  "Nachname des neuen Vereine"
-  nachname: String!
-  "Emailadresse des neuen Vereine"
+  "Name des neuen Vereine"
+  name: String!
+  "Emailadresse des neuen Vereins"
   email: String!
-  kategorie: Int!
-  "Newsletter-Abo: true / false"
-  hasNewsletter: Boolean!
-  "Geburtsdatum des neuen Vereine"
-  geburtsdatum: String
+  "Gruendungsdatum des neuen Vereins"
+  gruendungsdatum: String
   homepage: String
-  "Geschlecht des neuen Vereine: MAENNLICH, WEIBLICH, DIVERS"
-  geschlecht: Geschlecht
-  "Familienstand des neuen Vereine: LEDIG, VERHEIRATET, GESCHIEDEN, VERWITWET"
-  familienstand: Familienstand
-  "InteressEN des neuen Vereine: SPORT, LESEN, REISEN"
-  interessen: [Interesse!]
   "Umsatzangabe zum neuen Vereine"
   umsatz: UmsatzInput
   "Adresse des neuen Vereine"
   adresse: AdresseInput!
 }
 
-"Aufzählungstyp für das Geschlecht eines Vereine"
-enum Geschlecht {
-  WEIBLICH
-  MAENNLICH
-  DIVERS
-}
-
-"Aufzählungstyp für den Familienstand eines Vereine"
-enum Familienstand {
-  LEDIG
-  VERHEIRATET
-  GESCHIEDEN
-  VERWITWET
-}
-
-"Aufzählungstyp für die Interessen eines Vereine"
-enum Interesse {
-  SPORT
-  LESEN
-  REISEN
-}
 
 "Umsatzeingabe für einen Vereine: Neuanlegen oder Ändern"
 input UmsatzInput {

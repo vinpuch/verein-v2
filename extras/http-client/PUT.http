@@ -1,4 +1,4 @@
-### Einen Kunden mittels PUT aktualisieren
+### Einen Vereine mittels PUT aktualisieren
 PUT {{baseUrl}}/00000000-0000-0000-0000-000000000030
 Content-Type: application/json
 Authorization: Basic {{userAdmin}} {{password}}
@@ -6,18 +6,18 @@ Authorization: Basic {{userAdmin}} {{password}}
 < data/verein-30-put.json
 
 > {%
-    client.test('Einen Verein mittels PUT aktualisieren: No Content (204)', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren: No Content (204)', () => {
         const status = response.status;
         client.assert(status === 204, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('Einen Verein mittels PUT aktualisieren: leerer body', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren: leerer body', () => {
         const body = response.body;
         client.assert(body === null, `body: ${JSON.stringify(body)}`);
     });
 %}
 
-### Einen nicht-vorhandenen Verein mittels PUT aktualisieren: 404 (Not Found)
+### Einen nicht-vorhandenen Vereine mittels PUT aktualisieren: 404 (Not Found)
 PUT {{baseUrl}}/ffffffff-ffff-ffff-ffff-ffffffffffff
 Content-Type: application/json
 Authorization: Basic {{userAdmin}} {{password}}
@@ -25,36 +25,36 @@ Authorization: Basic {{userAdmin}} {{password}}
 < data/verein-30-put.json
 
 > {%
-    client.test('Einen Verein mittels PUT aktualisieren: Not Found (404)', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren: Not Found (404)', () => {
         const status = response.status;
         client.assert(status === 404, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('Einen Verein mittels PUT aktualisieren: leerer body', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren: leerer body', () => {
         const body = response.body;
         client.assert(body === null, `body: ${JSON.stringify(body)}`);
     });
 %}
 
-### Einen Verein mittels PUT aktualisieren und Email existiert: 422 (Unprocessable Entity)
+### Einen Vereine mittels PUT aktualisieren und Email existiert: 422 (Unprocessable Entity)
 PUT {{baseUrl}}/00000000-0000-0000-0000-000000000030
 Content-Type: application/json
 Authorization: Basic {{userAdmin}} {{password}}
 
-< data/vereine-30-put-email-exists.json
+< data/verein-30-put-email-exists.json
 
 > {%
-    client.test('Einen Verein mittels PUT aktualisieren und Email existiert: Unprocessable Entity (422)', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren und Email existiert: Unprocessable Entity (422)', () => {
         const status = response.status;
         client.assert(status === 422, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('Einen Verein mittels PUT aktualisieren und Email existiert: application/problem+json', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren und Email existiert: application/problem+json', () => {
         const mimeType = response.contentType.mimeType;
         client.assert(mimeType === "application/problem+json", `Falscher MIME-Typ: ${mimeType}`);
     });
 
-    client.test('Einen Verein mittels PUT aktualisieren und Email existiert: body mit ProblemDetail', () => {
+    client.test('Einen Vereine mittels PUT aktualisieren und Email existiert: body mit ProblemDetail', () => {
         const body = response.body;
         client.assert(typeof body === 'object', `body: ${JSON.stringify(body)}`);
         const detail = body.detail;
@@ -63,7 +63,7 @@ Authorization: Basic {{userAdmin}} {{password}}
     });
 %}
 
-### Einen Verein mittels PUT und ungueltigen Daten aktualisieren: 422 (Unprocessable Entity)
+### Einen Vereine mittels PUT und ungueltigen Daten aktualisieren: 422 (Unprocessable Entity)
 PUT {{baseUrl}}/00000000-0000-0000-0000-000000000030
 Content-Type: application/json
 Authorization: Basic {{userAdmin}} {{password}}
@@ -71,17 +71,17 @@ Authorization: Basic {{userAdmin}} {{password}}
 < data/verein-30-put-invalid.json
 
 > {%
-    client.test('Einen Verein mittels PUT und ungueltigen Daten aktualisieren: Unprocessable Entity (422)', () => {
+    client.test('Einen Vereine mittels PUT und ungueltigen Daten aktualisieren: Unprocessable Entity (422)', () => {
         const status = response.status;
         client.assert(status === 422, `Falscher Statuscode: ${status}`);
     });
 
-    client.test('Einen Verein mittels PUT und ungueltigen Daten aktualisieren: application/problem+json', () => {
+    client.test('Einen Vereine mittels PUT und ungueltigen Daten aktualisieren: application/problem+json', () => {
         const mimeType = response.contentType.mimeType;
         client.assert(mimeType === "application/problem+json", `Falscher MIME-Typ: ${mimeType}`);
     });
 
-    client.test('Einen Verein mittels PUT und ungueltigen Daten aktualisieren: body mit ProblemDetail', () => {
+    client.test('Einen Vereine mittels PUT und ungueltigen Daten aktualisieren: body mit ProblemDetail', () => {
         const body = response.body;
         client.assert(typeof body === 'object', `body: ${JSON.stringify(body)}`);
         const detail = body.detail;

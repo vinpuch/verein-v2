@@ -55,7 +55,7 @@ final class VereinQueryController {
     /**
      * Suche mit diversen Suchkriterien.
      *
-     * @param input Suchkriterien und ihre Werte, z.B. `nachname` und `Alpha`
+     * @param input Suchkriterien und ihre Werte, z.B. `name` und `Alpha`
      * @return Die gefundenen vereine als Collection
      */
     @QueryMapping

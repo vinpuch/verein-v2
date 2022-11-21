@@ -206,7 +206,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("org.springframework.boot:spring-boot-starter-json")
-   // implementation("org.springframework.boot:spring-boot-starter-graphql")
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     // Auskommentieren fuer Beispiel 1
@@ -355,7 +355,7 @@ tasks.named<BootBuildImage>("bootBuildImage") {
             // https://github.com/paketo-buildpacks/bellsoft-liberica/releases
             // https://paketo.io/docs/howto/java/#use-an-alternative-jvm
             // default: 11
-            "BP_JVM_VERSION" to "19.0.1+11",
+            "BP_JVM_VERSION" to "19.0.0",
             // https://github.com/paketo-buildpacks/bellsoft-liberica#configuration
             // https://github.com/paketo-buildpacks/spring-boot: Default=50 bei WebFlux statt 250
             // "BPL_JVM_THREAD_COUNT" to "250",
