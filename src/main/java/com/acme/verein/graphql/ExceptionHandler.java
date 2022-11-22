@@ -50,20 +50,14 @@ final class ExceptionHandler extends DataFetcherExceptionResolverAdapter {
     ) {
 
 
-        switch (ex) {
-            case final NotFoundException notFound -> {
-                return new NotFoundError(notFound.getId(), notFound.getSuchkriterien());
-            }
-            case final EmailExistsException emailExists -> {
-                return new EmailExistsError(emailExists.getEmail());
-            }
-            case final DateTimeParseException dateTimeParse -> {
-                return new DateTimeParseError(dateTimeParse.getParsedString());
-            }
-            default -> {
-                return super.resolveToSingleError(ex, env);
-            }
+        if (ex instanceof final NotFoundException notFound) {
+            return new NotFoundError(notFound.getId(), notFound.getSuchkriterien());
+        } else if (ex instanceof EmailExistsException emailExists) {
+            return new EmailExistsError(emailExists.getEmail());
+        } else if (ex instanceof DateTimeParseException dateTimeParse) {
+            return new DateTimeParseError(dateTimeParse.getParsedString());
         }
+        return super.resolveToSingleError(ex, env);
     }
 
     /**

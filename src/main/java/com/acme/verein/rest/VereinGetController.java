@@ -50,7 +50,7 @@ import static org.springframework.http.ResponseEntity.ok;
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @RestController
-@RequestMapping(REST_PATH)
+@RequestMapping("/rest")
 @Tag(name = "Verein API")
 @RequiredArgsConstructor
 @Slf4j

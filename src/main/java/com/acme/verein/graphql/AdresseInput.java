@@ -21,7 +21,6 @@ package com.acme.verein.graphql;
  *
  * @param plz Die 5-stellige Postleitzahl als unveränderliches Pflichtfeld.
  * @param ort Der Ort als unveränderliches Pflichtfeld.
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 record AdresseInput(String plz, String ort) {
 }

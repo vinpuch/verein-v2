@@ -1,0 +1,91 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Adresse {
+    "Ortsangabe"
+    ort: String!
+    "Postleitzahl der Adresse"
+    plz: String!
+}
+
+"Rückgabetyp beim Neuanlegen eines Vereine"
+type CreatePayload {
+    "ID des neu angelegten Vereine"
+    id: String!
+}
+
+type Mutation {
+    "Einen neuen Vereindatensatz anlegen"
+    create(input: VereinInput!): CreatePayload
+}
+
+"Suche nach Vereindaten"
+type Query {
+    "Suche Vereindaten anhand der ID"
+    verein(id: ID!): Verein
+    "Suche Vereindaten anhand des Nachnamens oder der Emailadresse"
+    vereine(input: Suchkriterien): [Verein!]
+}
+
+type Umsatz {
+    "Der Betrag"
+    betrag: String!
+    "Die Währung"
+    waehrung: String!
+}
+
+"Eigenschaften eines Verein-Datensatzes mit untergeordneten Eigenschaften"
+type Verein {
+    adresse: Adresse!
+    " https://www.graphql-scalars.dev/docs/scalars/email-address"
+    email: String!
+    " https://www.graphql-scalars.dev/docs/scalars/local-date"
+    gruendungsdatum: String
+    homepage: String
+    "ID des Vereine"
+    id: ID
+    "Name des Vereine"
+    name: String!
+    umsatz: Umsatz
+}
+
+"Neue oder geänderte Adresse"
+input AdresseInput {
+    ort: String!
+    plz: String!
+}
+
+"Suchkriterien für die Query 'vereine'"
+input Suchkriterien {
+    "Emailadresse der gesuchten Vereine"
+    email: String
+    "Name der gesuchten Vereine"
+    name: String
+}
+
+"Umsatzeingabe für einen Vereine: Neuanlegen oder Ändern"
+input UmsatzInput {
+    "Betrag"
+    betrag: String!
+    "Währung"
+    waehrung: String!
+}
+
+"Eingabedaten für einen neuen Vereine"
+input VereinInput {
+    "Adresse des neuen Vereine"
+    adresse: AdresseInput!
+    "Emailadresse des neuen Vereins"
+    email: String!
+    "Gruendungsdatum des neuen Vereins"
+    gruendungsdatum: String
+    homepage: String
+    "Name des neuen Vereine"
+    name: String!
+    "Umsatzangabe zum neuen Vereine"
+    umsatz: UmsatzInput
+}

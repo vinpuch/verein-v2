@@ -32,7 +32,6 @@ import java.time.LocalDate;
  * @param homepage        URL der Homepage
  * @param umsatz          Umsatz
  * @param adresse         Adresse
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @SuppressWarnings("RecordComponentNumber")
 record VereinInput(

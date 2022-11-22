@@ -24,7 +24,6 @@ import java.util.Map;
  *
  * @param name  Name
  * @param email Emailadresse
- * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 record Suchkriterien(
     String name,
