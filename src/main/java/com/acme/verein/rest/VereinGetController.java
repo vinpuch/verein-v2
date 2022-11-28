@@ -110,29 +110,37 @@ final class VereinGetController {
     }
 
 
-    @GetMapping(path = "findAll", produces = APPLICATION_JSON_VALUE)
+   /*
+   @GetMapping(path = "findAll", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<Collection<Verein>> findAll() {
         final var vereine = service.findAll();
         return ok(vereine);
     }
-
+*/
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Suche mit Suchkriterien", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "CollectionModel mit den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")
-    Collection<Verein> find(
+    CollectionModel<? extends VereinModel> find(
         @RequestParam final Map<String, String> suchkriterien,
         final HttpServletRequest request
-
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
 
         final var baseUri = uriHelper.getBaseUri(request).toString();
 
-        final var models = service.find(suchkriterien);
+        // Geschaeftslogik bzw. Anwendungskern
+        final var models = service.find(suchkriterien)
+            .stream()
+            .map(verein -> {
+                final var model = new VereinModel(verein);
+                model.add(Link.of(baseUri + '/' + verein.getId()));
+                return model;
+            })
+            .toList();
 
         log.debug("find: {}", models);
-        return models;
+        return CollectionModel.of(models);
     }
 
     @ExceptionHandler
