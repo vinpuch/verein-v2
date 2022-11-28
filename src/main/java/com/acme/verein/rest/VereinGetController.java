@@ -22,6 +22,7 @@ import com.acme.verein.service.VereinReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkRelation;
+
+import static com.acme.verein.rest.UriHelper.*;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
+
 
 import java.util.Collection;
 import java.util.Map;
@@ -67,6 +76,8 @@ final class VereinGetController {
 
     //static final String NACHNAME_PATH = "/nachname"; //NOSONAR
     private final VereinReadService service;
+    private final UriHelper uriHelper;
+
 
     // https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-ann-methods
     // https://localhost:8080/swagger-ui.html
@@ -76,14 +87,26 @@ final class VereinGetController {
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    Verein findById(@PathVariable final UUID id) {
-        log.debug("findByID: id={}", id);
+    Verein findById(@PathVariable final UUID id, final HttpServletRequest request) {
+        log.debug("findById: id={}", id);
 
-        // Anwendungskern
+        // Geschaeftslogik bzw. Anwendungskern
         final var verein = service.findById(id);
-        log.debug("findByID: {}", verein);
 
-        return verein;
+        // HATEOAS
+        final var model = new VereinModel(verein);
+        // evtl. Forwarding von einem API-Gateway
+        final var baseUri = uriHelper.getBaseUri(request).toString();
+        final var idUri = baseUri + '/' + verein.getId();
+        final var selfLink = Link.of(idUri);
+        final var listLink = Link.of(baseUri, LinkRelation.of("list"));
+        final var addLink = Link.of(baseUri, LinkRelation.of("add"));
+        final var updateLink = Link.of(idUri, LinkRelation.of("update"));
+        final var removeLink = Link.of(idUri, LinkRelation.of("remove"));
+        model.add(selfLink, listLink, addLink, updateLink, removeLink);
+
+        log.debug("findById: {}", model);
+        return model;
     }
 
 
@@ -98,9 +121,13 @@ final class VereinGetController {
     @ApiResponse(responseCode = "200", description = "CollectionModel mit den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")
     Collection<Verein> find(
-        @RequestParam final Map<String, String> suchkriterien
+        @RequestParam final Map<String, String> suchkriterien,
+        final HttpServletRequest request
+
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
+
+        final var baseUri = uriHelper.getBaseUri(request).toString();
 
         final var models = service.find(suchkriterien);
 

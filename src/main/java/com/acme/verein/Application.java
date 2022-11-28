@@ -21,12 +21,14 @@ import com.acme.verein.config.dev.DevConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-//import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
+//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
 //import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import static com.acme.verein.config.Banner.TEXT;
-//import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
-//import static org.springframework.hateoas.support.WebStack.WEBMVC;
+import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
+import static org.springframework.hateoas.support.WebStack.WEBMVC;
 
 /**
  * Klasse mit der main-Methode für die Anwendung auf Basis von Spring Boot.
@@ -35,7 +37,7 @@ import static com.acme.verein.config.Banner.TEXT;
  */
 @SpringBootApplication(proxyBeanMethods = false)
 @Import({AppConfig.class, DevConfig.class})
-//@EnableHypermediaSupport(type = HAL, stacks = WEBMVC)
+@EnableHypermediaSupport(type = HAL, stacks = WEBMVC)
 //@EnableWebSecurity
 //@EnableMethodSecurity
 @SuppressWarnings({"ImplicitSubclassInspection", "ClassUnconnectedToPackage"})
