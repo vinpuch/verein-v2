@@ -16,6 +16,6 @@
  */
 
 /**
- * Entity-Klassen für Kunden.
+ * Entity-Klassen für Vereine.
  */
 package com.acme.verein.entity;

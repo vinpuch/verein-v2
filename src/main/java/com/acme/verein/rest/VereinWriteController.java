@@ -80,7 +80,7 @@ final class VereinWriteController {
     */
 
     /**
-     * Einen neuen Kunde-Datensatz anlegen.
+     * Einen neuen Verein-Datensatz anlegen.
      *
      * @param vereinDTO Das Vereinobjekt aus dem eingegangenen Request-Body.
      * @param request wartet auf ServletRequest.
@@ -120,40 +120,40 @@ final class VereinWriteController {
 
     /*
     /**
-     * Einen vorhandenen Kunde-Datensatz durch PATCH aktualisieren.
+     * Einen vorhandenen Verein-Datensatz durch PATCH aktualisieren.
      *
-     * @param id ID des zu aktualisierenden Kunden.
+     * @param id ID des zu aktualisierenden Vereine.
      * @param operations Die Collection der Patch-Operationen
      * @return Response mit Statuscode 204 oder 422, falls Constraints verletzt sind oder
      *      der JSON-Datensatz syntaktisch nicht korrekt ist oder falls die Emailadresse bereits existiert oder 400
      *      falls syntaktische Fehler vorliegen.
     @PatchMapping(path = "{id:" + ID_PATTERN + "}", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "Einen Kunden mit einzelnen neuen Werten aktualisieren", tags = "Aktualisieren")
+    @Operation(summary = "Einen Vereine mit einzelnen neuen Werten aktualisieren", tags = "Aktualisieren")
     @ApiResponse(responseCode = "204", description = "Aktualisiert")
     @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
-    @ApiResponse(responseCode = "404", description = "Kunde nicht vorhanden")
+    @ApiResponse(responseCode = "404", description = "Verein nicht vorhanden")
     @ApiResponse(responseCode = "422", description = "Constraints verletzt oder Email vorhanden")
     ResponseEntity<Void> patch(
         @PathVariable final UUID id,
         @RequestBody final Collection<PatchOperation> operations
     ) {
         log.debug("patch: id={}, operations={}", id, operations);
-        final var kunde = readService.findById(id);
-        patcher.patch(kunde, operations);
-        log.debug("patch: {}", kunde);
-        service.update(kunde, id);
+        final var verein = readService.findById(id);
+        patcher.patch(verein, operations);
+        log.debug("patch: {}", verein);
+        service.update(verein, id);
         return noContent().build();
     }
     */
 
     /*
     /**
-     * Einen vorhandenen Kunden anhand seiner ID löschen.
+     * Einen vorhandenen Vereine anhand seiner ID löschen.
      *
-     * @param id ID des zu löschenden Kunden.
+     * @param id ID des zu löschenden Vereine.
      * @return Response mit Statuscode 204.
     @DeleteMapping(path = "{id:" + ID_PATTERN + "}")
-    @Operation(summary = "Einen Kunden anhand der ID loeschen", tags = "Loeschen")
+    @Operation(summary = "Einen Vereine anhand der ID loeschen", tags = "Loeschen")
     @ApiResponse(responseCode = "204", description = "Gelöscht")
     ResponseEntity<Void> deleteById(@PathVariable final UUID id)  {
         log.debug("deleteById: id={}", id);

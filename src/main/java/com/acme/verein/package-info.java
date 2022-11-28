@@ -16,6 +16,6 @@
  */
 
 /**
- * Microservice "kunde".
+ * Microservice "verein".
  */
 package com.acme.verein;

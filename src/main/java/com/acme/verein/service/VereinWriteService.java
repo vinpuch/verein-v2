@@ -69,7 +69,7 @@ public final class VereinWriteService {
      * @param verein Das Objekt mit den neuen Daten (ohne ID)
      * @param id ID des zu aktualisierenden Vereins
      * @throws ConstraintViolationsException Falls mindestens ein Constraint verletzt ist.
-     * @throws NotFoundException Kein Kunde zur ID vorhanden.
+     * @throws NotFoundException Kein Verein zur ID vorhanden.
      */
     public void update(final Verein verein, final UUID id) {
         log.debug("update: {}", verein);

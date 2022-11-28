@@ -16,6 +16,6 @@
  */
 
 /**
- * Repository für Kunden.
+ * Repository für Vereine.
  */
 package com.acme.verein.repository;
