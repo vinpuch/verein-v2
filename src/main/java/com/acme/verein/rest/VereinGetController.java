@@ -87,7 +87,7 @@ final class VereinGetController {
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    Verein findById(@PathVariable final UUID id, final HttpServletRequest request) {
+    VereinModel findById(@PathVariable final UUID id, final HttpServletRequest request) {
         log.debug("findById: id={}", id);
 
         // Geschaeftslogik bzw. Anwendungskern
