@@ -16,9 +16,7 @@
  */
 package com.acme.verein.rest;
 
-import com.acme.verein.service.ConstraintViolationsException;
-import com.acme.verein.service.NotFoundException;
-import com.acme.verein.service.VereinWriteService;
+import com.acme.verein.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -74,16 +72,17 @@ final class VereinWriteController {
     private static final String PROBLEM_PATH = "/problem/"; //NOSONAR
 
     private final VereinWriteService service;
-    /*
-    private final VereinReadService readService;
-    private final KundePatcher patcher;
-    */
+
+    //private final VereinReadService readService;
+    //  private final KundePatcher patcher;
+    private final UriHelper uriHelper;
+
 
     /**
      * Einen neuen Verein-Datensatz anlegen.
      *
      * @param vereinDTO Das Vereinobjekt aus dem eingegangenen Request-Body.
-     * @param request wartet auf ServletRequest.
+     * @param request   wartet auf ServletRequest.
      * @return URI dem eingegangenen Request-Body.
      */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
@@ -93,17 +92,22 @@ final class VereinWriteController {
     @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
     @ApiResponse(responseCode = "422", description = "Ungültige Werte")
     @SuppressWarnings("TrailingComment")
-    ResponseEntity<Void> create(@RequestBody final VereinDTO vereinDTO, final HttpServletRequest request)
-        throws URISyntaxException {
-        final var vereinDB = service.create(vereinDTO.toVerein());
-        final var location = new URI(request.getRequestURI() + "/" + vereinDB.getId());
+    ResponseEntity<Void> create(
+        @RequestBody final VereinDTO vereinDTO,
+        final HttpServletRequest request
+    ) throws URISyntaxException {
+        log.debug("create: {}", vereinDTO);
+
+        final var verein = service.create(vereinDTO.toVerein());
+        final var baseUri = uriHelper.getBaseUri(request).toString();
+        final var location = new URI(baseUri + '/' + verein.getId()); //NOSONAR
         return created(location).build();
     }
 
     /**
      * Einen vorhandenen Verein-Datensatz überschreiben.
      *
-     * @param id ID des zu aktualisierenden Vereins.
+     * @param id        ID des zu aktualisierenden Vereins.
      * @param vereinDTO Das Kundenobjekt aus dem eingegangenen Request-Body.
      */
     @PutMapping(path = "{id:" + ID_PATTERN + "}", consumes = APPLICATION_JSON_VALUE)
@@ -113,7 +117,8 @@ final class VereinWriteController {
     @ApiResponse(responseCode = "400", description = "Syntaktische Fehler im Request-Body")
     @ApiResponse(responseCode = "404", description = "Verein nicht vorhanden")
     @ApiResponse(responseCode = "422", description = "Ungültige Werte")
-    void update(@PathVariable final UUID id, @RequestBody final VereinDTO vereinDTO) {
+    void update(@PathVariable final UUID id, @RequestBody final VereinDTO vereinDTO
+    ) {
         log.debug("update: id={}, {}", id, vereinDTO);
         service.update(vereinDTO.toVerein(), id);
     }
@@ -165,7 +170,8 @@ final class VereinWriteController {
     @ExceptionHandler
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @SuppressWarnings("unused")
-    ProblemDetail handleConstraintViolations(final ConstraintViolationsException ex) {
+    ProblemDetail handleConstraintViolations(final ConstraintViolationsException ex, final HttpServletRequest request
+    ) {
         log.debug("handleConstraintViolations: {}", ex.getMessage());
 
         final var vereinViolations = ex.getViolations()
@@ -186,9 +192,12 @@ final class VereinWriteController {
 
         final var problemDetail = ProblemDetail.forStatusAndDetail(UNPROCESSABLE_ENTITY, detail);
         problemDetail.setType(URI.create(PROBLEM_PATH + ProblemType.CONSTRAINTS.getValue()));
+        final var uri = uriHelper.getBaseUri(request);
+        problemDetail.setInstance(uri);
 
         return problemDetail;
     }
+
 
     @ExceptionHandler
     @ResponseStatus(BAD_REQUEST)
@@ -199,7 +208,16 @@ final class VereinWriteController {
         problemDetail.setType(URI.create(PROBLEM_PATH + ProblemType.BAD_REQUEST.getValue()));
         return problemDetail;
     }
-
+    @ExceptionHandler
+    @SuppressWarnings("unused")
+    ResponseEntity<ProblemDetail> onEmailExists(final EmailExistsException ex, final HttpServletRequest request) {
+        log.debug("onEmailExists: {}", ex.getMessage());
+        final var problemDetail = ProblemDetail.forStatusAndDetail(UNPROCESSABLE_ENTITY, ex.getMessage());
+        problemDetail.setType(URI.create(PROBLEM_PATH + ProblemType.CONSTRAINTS.getValue()));
+        final var uri = uriHelper.getBaseUri(request);
+        problemDetail.setInstance(uri);
+        return ResponseEntity.of(problemDetail).build();
+    }
     /**
      * ExceptionHandler für eine NotFoundException.
      *
