@@ -21,25 +21,13 @@ package org.springframework {
         interface "@PathVariable" as PathVariable
 
         interface "@RequestParam" as RequestParam
-
-        interface "@RequestBody" as RequestBody
     }
-
-    package http {
-        class ResponseEntity<T>
-    }
-    package hateoas {
-        class CollectionModel<E>
-    }
-}
-
-package jakarta.servlet.http {
-    interface HttpServletRequest
 }
 
 package java.util {
     interface Map<K,V>
     class UUID
+    class Collection<T>
 }
 
 package com.acme.verein {
@@ -48,26 +36,24 @@ package com.acme.verein {
     }
 
     package rest #DDDDDD {
-        class VereinModel <<entity>>
+      class Verein <<entity>>
 
         class VereinGetController << boundary >> << @RestController >> << @RequestMapping >> {
-            + @GetMapping findById(@PathVariable id: UUID, request: HttpServletRequest): ResponseEntity<VereinModel>
-            + @GetMapping find(@RequestParam queryParams: Map<String, String>, request: HttpServletRequest): ResponseEntity<CollectionModel<VereinModel>>
+            + @GetMapping findById(@PathVariable id: UUID): Verein
+            + @GetMapping find(@RequestParam suchkriterien : final Map<String, String>): Verein
+            + @Exceptionhandler onNotFound(final ex: NotFoundException): void
         }
 
-        VereinGetController o-right-> "1" VereinReadService : service
-        VereinGetController ..> VereinModel
-
-        VereinGetController .up.> ResponseEntity
-        VereinGetController .up.> CollectionModel
-        VereinGetController .up.> HttpServletRequest
-        VereinGetController .up.> PathVariable
+        VereinGetController o-up-> "1" VereinReadService : service
+        VereinGetController ..> Verein
+        VereinGetController .down.> PathVariable
         VereinGetController .up.> RequestParam
 
         VereinGetController .up.> UUID
         VereinGetController .up.> Map
+        VereinGetController .up.> Collection
 
-        VereinModel .[hidden].> VereinReadService
+
     }
 }
 
