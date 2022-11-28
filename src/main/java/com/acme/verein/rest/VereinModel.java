@@ -17,17 +17,17 @@
 package com.acme.verein.rest;
 
 import com.acme.verein.entity.Adresse;
-
 import com.acme.verein.entity.Verein;
 import com.acme.verein.entity.Umsatz;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.net.URL;
 import java.time.LocalDate;
-// import java.util.List;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -39,20 +39,19 @@ import org.springframework.hateoas.server.core.Relation;
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @JsonPropertyOrder({
-    "nachname", "email", "kategorie", "hasNewsletter", "geburtsdatum", "homepage", "geschlecht", "familienstand",
-    "interessen", "umsatz", "adresse"
+    "nachname", "email", "gruendungsdatum", "homepage",
+     "umsatz", "adresse"
 })
 @Relation(collectionRelation = "verein", itemRelation = "verein")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter
+@ToString(callSuper = true)
 final class VereinModel extends RepresentationModel<VereinModel> {
     private final String name;
 
     @EqualsAndHashCode.Include
     private final String email;
-
-
     private final LocalDate gruendungssdatum;
     private final URL homepage;
     private final Umsatz umsatz;
