@@ -19,6 +19,7 @@ package com.acme.verein.rest;
 import com.acme.verein.entity.Adresse;
 import com.acme.verein.entity.Verein;
 import com.acme.verein.entity.Umsatz;
+
 import java.net.URL;
 import java.time.LocalDate;
 
@@ -26,13 +27,12 @@ import java.time.LocalDate;
  * ValueObject für das Neuanlegen und Ändern eines neuen Vereins. Beim Lesen wird die Klasse VereinModel für die Ausgabe
  * verwendet.
  *
- * @author [Jürgen Zimmermann](mailto:Juergen.Zimmermann@h-ka.de)
- * @param name Gültiger Nachname eines Vereins, d.h. mit einem geeigneten Muster.
- * @param email Email eines Vereins.
- * @param gruendungsdatum Das Geburtsdatum eines Vereins.
- * @param homepage Die Homepage eines Vereins.
- * @param umsatz Der Umsatz eines Vereins.
- * @param adresse Die Adresse eines Vereins.
+ * @param name            Gültiger Nachname eines Vereins, d.h. mit einem geeigneten Muster.
+ * @param email           E-Mail eines Vereins.
+ * @param gruendungsdatum Das Gruendungsdatum eines Vereins.
+ * @param homepage        Die Homepage eines Vereins.
+ * @param umsatz          Der Umsatz eines Vereins.
+ * @param adresse         Die Adresse eines Vereins.
  */
 @SuppressWarnings("RecordComponentNumber")
 record VereinDTO(

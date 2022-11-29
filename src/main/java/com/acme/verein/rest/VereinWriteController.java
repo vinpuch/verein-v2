@@ -16,11 +16,13 @@
  */
 package com.acme.verein.rest;
 
-import com.acme.verein.service.*;
+import com.acme.verein.service.ConstraintViolationsException;
+import com.acme.verein.service.EmailExistsException;
+import com.acme.verein.service.NotFoundException;
+import com.acme.verein.service.VereinWriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-//import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,24 +37,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.net.URI;
-//import java.net.URISyntaxException;
-//import java.util.Collection;
-//import java.net.URISyntaxException;
 import java.net.URISyntaxException;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import static com.acme.verein.rest.VereinGetController.ID_PATTERN;
-//import static com.acme.verein.rest.VereinGetController.REST_PATH;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.created;
-//import static org.springframework.http.ResponseEntity.*;
 
 /**
  * Eine `@RestController`-Klasse bildet die REST-Schnittstelle, wobei die HTTP-Methoden, Pfade und MIME-Typen auf die
@@ -124,7 +119,6 @@ final class VereinWriteController {
     }
 
 
-
     @ExceptionHandler
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @SuppressWarnings("unused")
@@ -166,6 +160,7 @@ final class VereinWriteController {
         problemDetail.setType(URI.create(PROBLEM_PATH + ProblemType.BAD_REQUEST.getValue()));
         return problemDetail;
     }
+
     @ExceptionHandler
     @SuppressWarnings("unused")
     ResponseEntity<ProblemDetail> onEmailExists(final EmailExistsException ex, final HttpServletRequest request) {
@@ -176,6 +171,7 @@ final class VereinWriteController {
         problemDetail.setInstance(uri);
         return ResponseEntity.of(problemDetail).build();
     }
+
     /**
      * ExceptionHandler für eine NotFoundException.
      *
@@ -186,6 +182,4 @@ final class VereinWriteController {
     void onNotFound(final NotFoundException ex) {
         log.debug("onNotFound: {}", ex.getMessage());
     }
-
-
 }

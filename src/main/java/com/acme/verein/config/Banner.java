@@ -20,7 +20,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
-import lombok.SneakyThrows;
 import org.apache.catalina.util.ServerInfo;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.core.SpringVersion;

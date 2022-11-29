@@ -18,6 +18,7 @@ package com.acme.verein.service;
 
 import java.util.Map;
 import java.util.UUID;
+
 import lombok.Getter;
 
 /**
@@ -50,10 +51,5 @@ public final class NotFoundException extends RuntimeException {
         this.suchkriterien = suchkriterien;
     }
 
-    @SuppressWarnings("AssignmentToNull")
-    NotFoundException() {
-        super("Keine Vereine gefunden.");
-        id = null;
-        suchkriterien = null;
-    }
+
 }

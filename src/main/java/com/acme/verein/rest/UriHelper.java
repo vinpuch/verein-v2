@@ -17,11 +17,14 @@
 package com.acme.verein.rest;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import static com.acme.verein.rest.VereinGetController.REST_PATH;
 
 /**

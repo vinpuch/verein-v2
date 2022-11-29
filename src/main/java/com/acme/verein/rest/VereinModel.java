@@ -19,11 +19,9 @@ package com.acme.verein.rest;
 import com.acme.verein.entity.Adresse;
 import com.acme.verein.entity.Verein;
 import com.acme.verein.entity.Umsatz;
-
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +38,7 @@ import org.springframework.hateoas.server.core.Relation;
  */
 @JsonPropertyOrder({
     "nachname", "email", "gruendungsdatum", "homepage",
-     "umsatz", "adresse"
+    "umsatz", "adresse"
 })
 @Relation(collectionRelation = "verein", itemRelation = "verein")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)

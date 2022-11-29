@@ -18,7 +18,9 @@ package com.acme.verein.service;
 
 import com.acme.verein.entity.Verein;
 import jakarta.validation.ConstraintViolation;
+
 import java.util.Collection;
+
 import lombok.Getter;
 
 /**
@@ -34,8 +36,7 @@ public class ConstraintViolationsException extends RuntimeException {
     private final Collection<ConstraintViolation<Verein>> violations;
 
     ConstraintViolationsException(
-        @SuppressWarnings("ParameterHidesMemberVariable")
-        final Collection<ConstraintViolation<Verein>> violations
+        @SuppressWarnings("ParameterHidesMemberVariable") final Collection<ConstraintViolation<Verein>> violations
     ) {
         super("Constraints sind verletzt");
         this.violations = violations;
