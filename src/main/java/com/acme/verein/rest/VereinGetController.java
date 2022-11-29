@@ -74,7 +74,6 @@ final class VereinGetController {
     static final String REST_PATH = "/rest";
 
 
-    //static final String NACHNAME_PATH = "/nachname"; //NOSONAR
     private final VereinReadService service;
     private final UriHelper uriHelper;
 
