@@ -83,7 +83,7 @@ final class VereinGetController {
     // https://localhost:8080/swagger-ui.html
 
 
-    @GetMapping(path = "{id:" + ID_PATTERN + "}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "{id:" + ID_PATTERN + "}", produces = HAL_JSON_VALUE)
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
@@ -102,8 +102,7 @@ final class VereinGetController {
         final var listLink = Link.of(baseUri, LinkRelation.of("list"));
         final var addLink = Link.of(baseUri, LinkRelation.of("add"));
         final var updateLink = Link.of(idUri, LinkRelation.of("update"));
-        final var removeLink = Link.of(idUri, LinkRelation.of("remove"));
-        model.add(selfLink, listLink, addLink, updateLink, removeLink);
+        model.add(selfLink, listLink, addLink, updateLink);
 
         log.debug("findById: {}", model);
         return model;
@@ -117,7 +116,7 @@ final class VereinGetController {
         return ok(vereine);
     }
 */
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = HAL_JSON_VALUE)
     @Operation(summary = "Suche mit Suchkriterien", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "CollectionModel mit den Vereinen")
     @ApiResponse(responseCode = "404", description = "Keine Vereine gefunden")

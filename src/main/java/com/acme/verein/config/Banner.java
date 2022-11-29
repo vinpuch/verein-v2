@@ -19,6 +19,7 @@ package com.acme.verein.config;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
+
 import lombok.SneakyThrows;
 import org.apache.catalina.util.ServerInfo;
 import org.springframework.boot.SpringBootVersion;
@@ -98,8 +99,11 @@ public final class Banner {
     private Banner() {
     }
 
-    @SneakyThrows(UnknownHostException.class)
     private static InetAddress getLocalhost() {
-        return InetAddress.getLocalHost();
+        try {
+            return InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
