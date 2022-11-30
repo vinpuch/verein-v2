@@ -110,6 +110,22 @@ public final class VereinRepository {
         log.debug("findByName: vereine={}", vereine);
         return vereine;
     }
+    /**
+     * Abfrage, welche Namen es zu einem Präfix gibt.
+     *
+     * @param prefix Name-Präfix.
+     * @return Die passenden Namen oder eine leere Collection.
+     */
+    public @NonNull Collection<String> findNamenByPrefix(final @NonNull String prefix) {
+        log.debug("findByName: prefix={}", prefix);
+        final var namen = VEREINE.stream()
+            .map(Verein::getName)
+            .filter(name -> name.startsWith(prefix))
+            .distinct()
+            .toList();
+        log.debug("findByName: namen={}", namen);
+        return namen;
+    }
 
     /**
      * Einen neuen Verein anlegen.

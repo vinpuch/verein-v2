@@ -65,11 +65,7 @@ import static org.springframework.http.ResponseEntity.created;
 final class VereinWriteController {
     @SuppressWarnings("TrailingComment")
     private static final String PROBLEM_PATH = "/problem/"; //NOSONAR
-
     private final VereinWriteService service;
-
-    //private final VereinReadService readService;
-    //  private final KundePatcher patcher;
     private final UriHelper uriHelper;
 
 

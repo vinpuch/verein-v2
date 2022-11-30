@@ -51,5 +51,11 @@ public final class NotFoundException extends RuntimeException {
         this.suchkriterien = suchkriterien;
     }
 
+    @SuppressWarnings("AssignmentToNull")
+    NotFoundException() {
+        super("Keine Vereine gefunden.");
+        id = null;
+        suchkriterien = null;
+    }
 
 }

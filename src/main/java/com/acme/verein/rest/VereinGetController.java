@@ -38,6 +38,7 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import java.util.Map;
 import java.util.UUID;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Eine @RestController-Klasse bildet die REST-Schnittstelle, wobei die HTTP-Methoden, Pfade und MIME-Typen auf die
@@ -61,7 +62,11 @@ final class VereinGetController {
     @SuppressWarnings("TrainingComment")
     static final String REST_PATH = "/rest";
 
-
+    /**
+     * Pfad, um Namen abzufragen.
+     */
+    @SuppressWarnings("TrailingComment")
+    private static final String NAME_PATH = "/name"; //NOSONAR
     private final VereinReadService service;
     private final UriHelper uriHelper;
 
@@ -119,10 +124,23 @@ final class VereinGetController {
             })
             .toList();
 
+
         log.debug("find: {}", models);
         return CollectionModel.of(models);
     }
-
+    /**
+     * Abfrage, welche Namen es zu einem Präfix gibt.
+     *
+     * @param prefix Name-Präfix als Pfadvariable.
+     * @return Die passenden Namen oder Statuscode 404, falls es keine gibt.
+     */
+    @GetMapping(path = NAME_PATH + "/{prefix}", produces = APPLICATION_JSON_VALUE)
+    String findNamenByPrefix(@PathVariable final String prefix) {
+        log.debug("findNamenByPrefix: {}", prefix);
+        final var namen = service.findNamenByPrefix(prefix);
+        log.debug("findNamenByPrefix: {}", namen);
+        return namen.toString();
+    }
     @ExceptionHandler
     @ResponseStatus(NOT_FOUND)
     void onNotFound(final NotFoundException ex) {

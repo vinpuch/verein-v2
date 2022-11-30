@@ -112,4 +112,18 @@ public final class VereinReadService {
         log.debug("find: {}", vereine);
         return vereine;
     }
+    /**
+     * Abfrage, welche Nachnamen es zu einem Präfix gibt.
+     *
+     * @param prefix Nachname-Präfix.
+     * @return Die passenden Nachnamen.
+     * @throws NotFoundException Falls keine Nachnamen gefunden wurden.
+     */
+    public Collection<String> findNamenByPrefix(final String prefix) {
+        final var namen = repo.findNamenByPrefix(prefix);
+        if (namen.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return namen;
+    }
 }
