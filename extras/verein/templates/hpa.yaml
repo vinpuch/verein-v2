@@ -23,6 +23,8 @@ metadata:
   name: {{ include "verein.fullname" . }}
   labels:
     {{- include "verein.labels" . | nindent 4 }}
+  namespace: {{ .Values.namespace }}
+
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

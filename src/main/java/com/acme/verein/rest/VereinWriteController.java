@@ -116,7 +116,6 @@ final class VereinWriteController {
 
 
     @ExceptionHandler
-    @ResponseStatus(UNPROCESSABLE_ENTITY)
     @SuppressWarnings("unused")
     ProblemDetail handleConstraintViolations(final ConstraintViolationsException ex, final HttpServletRequest request
     ) {
@@ -148,7 +147,6 @@ final class VereinWriteController {
 
 
     @ExceptionHandler
-    @ResponseStatus(BAD_REQUEST)
     @SuppressWarnings("unused")
     ProblemDetail handleMessageNotReadable(final HttpMessageNotReadableException ex) {
         log.debug("handleMessageNotReadable: {}", ex.getMessage());

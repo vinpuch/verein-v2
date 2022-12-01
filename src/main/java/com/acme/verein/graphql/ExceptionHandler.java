@@ -49,15 +49,13 @@ final class ExceptionHandler extends DataFetcherExceptionResolverAdapter {
         @SuppressWarnings("NullableProblems") final DataFetchingEnvironment env
     ) {
 
-
-        if (ex instanceof final NotFoundException notFound) {
-            return new NotFoundError(notFound.getId(), notFound.getSuchkriterien());
-        } else if (ex instanceof EmailExistsException emailExists) {
-            return new EmailExistsError(emailExists.getEmail());
-        } else if (ex instanceof DateTimeParseException dateTimeParse) {
-            return new DateTimeParseError(dateTimeParse.getParsedString());
-        }
-        return super.resolveToSingleError(ex, env);
+        // "Pattern Matching"
+        return switch (ex) {
+            case final NotFoundException notFound -> new NotFoundError(notFound.getId(), notFound.getSuchkriterien());
+            case final EmailExistsException emailExists -> new EmailExistsError(emailExists.getEmail());
+            case final DateTimeParseException dateTimeParse -> new DateTimeParseError(dateTimeParse.getParsedString());
+            default -> super.resolveToSingleError(ex, env);
+        };
     }
 
     /**

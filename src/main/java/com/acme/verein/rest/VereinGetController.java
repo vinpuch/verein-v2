@@ -111,19 +111,21 @@ final class VereinGetController {
         final HttpServletRequest request
     ) {
         log.debug("find: suchkriterien={}", suchkriterien);
-
         final var baseUri = uriHelper.getBaseUri(request).toString();
 
-        // Geschaeftslogik bzw. Anwendungskern
+        //Geschäftslogik
         final var models = service.find(suchkriterien)
             .stream()
             .map(verein -> {
                 final var model = new VereinModel(verein);
-                model.add(Link.of(baseUri + '/' + verein.getId()));
+                final var idUri = baseUri + '/' + verein.getId();
+                final var selfLink = Link.of(idUri);
+                final var listLink = Link.of(baseUri, LinkRelation.of("list"));
+                final var addLink = Link.of(baseUri, LinkRelation.of("add"));
+                final var updateLink = Link.of(idUri, LinkRelation.of("update"));
+                model.add(selfLink, listLink, addLink, updateLink);
                 return model;
-            })
-            .toList();
-
+            }).toList();
 
         log.debug("find: {}", models);
         return CollectionModel.of(models);

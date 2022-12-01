@@ -17,33 +17,36 @@
 skinparam classAttributeIconSize 0
 
 package java.util {
-    interface List<T>
+    interface Collection<T>
     interface Map<K,V>
     class UUID
+    interface List
 }
 
-package com.acme.verein {
+package com.acme.bank {
     package entity {
-        class Verein << entity >>
+        class Bank << entity >>
 
-        Verein .up[hidden].> List
     }
+
 
     package repository {
         class VereinRepository << control >> << @Repository >>
     }
 
-    package service #DDDDDD {
-        class VereinReadService << control >> << @Service >> {
-            + findById(id: UUID): Verein
-            + find(queryParams: Map<String, String>): List<Verein>
-        }
-
+       package service #DDDDDD {
+           class BankReadService << control >> << @Service >> {
+               + findById(id: UUID ): Bank
+               + find(suchkriterien: Map<String, String>): Collection<Bank>
+               + findNamenByPrefix(prefix: String):Collection
+           }
         VereinReadService o--> VereinRepository : repo
         VereinReadService .up.> Verein
+        VereinReadService .up.>List
         VereinReadService .up.> UUID
-        VereinReadService .up> List
-        VereinReadService .up.> Map
+        VereinReadService .up> Map
+        VereinReadService .up.>Collection
+
     }
 }
 

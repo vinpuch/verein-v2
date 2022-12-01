@@ -20,6 +20,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "verein.fullname" . }}
+  namespace: {{ .Values.namespace }}
+
 data:
   # Key-Value-Paare (hier: fuer die Umgebungsvariable)
   TZ: Europe/Berlin

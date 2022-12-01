@@ -21,6 +21,8 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "verein.fullname" . }}
+  namespace: {{ .Values.namespace }}
+
 spec:
   # Spezifikation, auf welche Pods die NetworkPolicy angewendet wird
   podSelector:

@@ -28,6 +28,8 @@ metadata:
     # https://helm.sh/docs/chart_template_guide/function_list
     # nindent rueckt um eine bestimmte Anzahl ("n") Zeichen ein
     {{- include "verein.labels" . | nindent 4 }}
+  namespace: {{ .Values.namespace }}
+
 spec:
   # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#selector
   selector:

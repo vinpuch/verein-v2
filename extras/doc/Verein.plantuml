@@ -20,7 +20,6 @@ skinparam classAttributeIconSize 0
 package java {
     package util {
         class UUID
-        interface List<T>
         class URL
         class Currency
     }
@@ -62,7 +61,6 @@ package com.acme.verein.entity #DDDDDD {
 
     Verein ..> UUID
     Verein ..> LocalDate
-    Verein ..> List
     Verein ..> URL
 
     Umsatz ..> Currency
