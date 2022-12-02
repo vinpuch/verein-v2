@@ -19,8 +19,7 @@
 
 # "Param" muss in der 1. Zeile sein
 Param (
-    [string]$service = 'verein
-    '
+    [string]$service = 'verein'
 )
 
 Set-StrictMode -Version Latest
