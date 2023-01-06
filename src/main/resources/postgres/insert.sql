@@ -14,7 +14,7 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 --  docker compose exec postgres bash
---  psql --dbname=kunde --username=kunde --file=/scripts/insert.sql
+--  psql --dbname=verein --username=verein --file=/scripts/insert.sql
 
 INSERT INTO login (id, username, password) VALUES ('30000000-0000-0000-0000-000000000000','admin','{argon2id}$argon2id$v=19$m=16384,t=3,p=1$QHb5SxDhddjUiGboXTc9S9yCmRoPsBejIvW/dw50DKg$WXZDFJowwMX5xsOun2BT2R3hv2aA9TSpnx3hZ3px59sTW0ObtqBwX7Sem6ACdpycArUHfxmFfv9Z49e7I+TI/g');
 INSERT INTO login (id, username, password) VALUES ('30000000-0000-0000-0000-000000000001','alpha','{argon2id}$argon2id$v=19$m=16384,t=3,p=1$QHb5SxDhddjUiGboXTc9S9yCmRoPsBejIvW/dw50DKg$WXZDFJowwMX5xsOun2BT2R3hv2aA9TSpnx3hZ3px59sTW0ObtqBwX7Sem6ACdpycArUHfxmFfv9Z49e7I+TI/g');
@@ -25,14 +25,14 @@ INSERT INTO login (id, username, password) VALUES ('30000000-0000-0000-0000-0000
 INSERT INTO login (id, username, password) VALUES ('30000000-0000-0000-0000-000000000060','phi','{argon2id}$argon2id$v=19$m=16384,t=3,p=1$QHb5SxDhddjUiGboXTc9S9yCmRoPsBejIvW/dw50DKg$WXZDFJowwMX5xsOun2BT2R3hv2aA9TSpnx3hZ3px59sTW0ObtqBwX7Sem6ACdpycArUHfxmFfv9Z49e7I+TI/g');
 
 INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000000','ADMIN');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000000','KUNDE');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000000','VEREIN');
 INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000000','ACTUATOR');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000001','KUNDE');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000002','KUNDE');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000030','KUNDE');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000040','KUNDE');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000050','KUNDE');
-INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000060','KUNDE');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000001','VEREIN');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000002','VEREIN');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000030','VEREIN');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000040','VEREIN');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000050','VEREIN');
+INSERT INTO login_rollen (login_id, rolle) VALUES ('30000000-0000-0000-0000-000000000060','VEREIN');
 
 INSERT INTO umsatz (id, betrag, waehrung) VALUES ('10000000-0000-0000-0000-000000000000',0,'EUR');
 INSERT INTO umsatz (id, betrag, waehrung) VALUES ('10000000-0000-0000-0000-000000000001',10,'EUR');
@@ -49,23 +49,23 @@ INSERT INTO adresse (id, plz, ort) VALUES ('20000000-0000-0000-0000-000000000050
 INSERT INTO adresse (id, plz, ort) VALUES ('20000000-0000-0000-0000-000000000060','66666','Freiburg');
 
 -- admin
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000000',0,'Admin','admin@acme.com',0,true,'2022-01-31','https://www.acme.com','W','VH','10000000-0000-0000-0000-000000000000','20000000-0000-0000-0000-000000000000','admin','2022-01-31 00:00:00','2022-01-31 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000000',0,'Admin','admin@acme.com',0,true,'2022-01-31','https://www.acme.com','W','VH','10000000-0000-0000-0000-000000000000','20000000-0000-0000-0000-000000000000','admin','2022-01-31 00:00:00','2022-01-31 00:00:00');
 -- HTTP GET
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000001',0,'Alpha','alpha@acme.de',1,true,'2022-01-01','https://www.acme.de','M','L','10000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000001','alpha','2022-01-01 00:00:00','2022-01-01 00:00:00');
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000002',0,'Alpha','alpha@acme.edu',2,true,'2022-01-02','https://www.acme.edu','W','G','10000000-0000-0000-0000-000000000002','20000000-0000-0000-0000-000000000002','alpha2','2022-01-02 00:00:00','2022-01-02 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000001',0,'Alpha','alpha@acme.de',1,true,'2022-01-01','https://www.acme.de','M','L','10000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000001','alpha','2022-01-01 00:00:00','2022-01-01 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000002',0,'Alpha','alpha@acme.edu',2,true,'2022-01-02','https://www.acme.edu','W','G','10000000-0000-0000-0000-000000000002','20000000-0000-0000-0000-000000000002','alpha2','2022-01-02 00:00:00','2022-01-02 00:00:00');
 -- HTTP PUT
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000030',0,'Alpha','alpha@acme.ch',3,true,'2022-01-03','https://www.acme.ch','M','VW','10000000-0000-0000-0000-000000000030','20000000-0000-0000-0000-000000000030','alpha3','2022-01-03 00:00:00','2022-01-03 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000030',0,'Alpha','alpha@acme.ch',3,true,'2022-01-03','https://www.acme.ch','M','VW','10000000-0000-0000-0000-000000000030','20000000-0000-0000-0000-000000000030','alpha3','2022-01-03 00:00:00','2022-01-03 00:00:00');
 -- HTTP PATCH
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000040',0,'Delta','delta@acme.uk',4,true,'2022-01-04','https://www.acme.uk','W','VH','10000000-0000-0000-0000-000000000040','20000000-0000-0000-0000-000000000040','delta','2022-01-04 00:00:00','2022-01-04 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000040',0,'Delta','delta@acme.uk',4,true,'2022-01-04','https://www.acme.uk','W','VH','10000000-0000-0000-0000-000000000040','20000000-0000-0000-0000-000000000040','delta','2022-01-04 00:00:00','2022-01-04 00:00:00');
 -- HTTP DELETE
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000050',0,'Epsilon','epsilon@acme.jp',5,true,'2022-01-05','https://www.acme.jp','M','L',null,'20000000-0000-0000-0000-000000000050','epsilon','2022-01-05 00:00:00','2022-01-05 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000050',0,'Epsilon','epsilon@acme.jp',5,true,'2022-01-05','https://www.acme.jp','M','L',null,'20000000-0000-0000-0000-000000000050','epsilon','2022-01-05 00:00:00','2022-01-05 00:00:00');
 -- zur freien Verfuegung
-INSERT INTO kunde (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000060',0,'Phi','phi@acme.cn',6,true,'2022-01-06','https://www.acme.cn','D','L',null,'20000000-0000-0000-0000-000000000060','phi','2022-01-06 00:00:00','2022-01-06 00:00:00');
+INSERT INTO verein (id, version, nachname, email, kategorie, has_newsletter, geburtsdatum, homepage, geschlecht, familienstand, umsatz_id, adresse_id, username, erzeugt, aktualisiert) VALUES ('00000000-0000-0000-0000-000000000060',0,'Phi','phi@acme.cn',6,true,'2022-01-06','https://www.acme.cn','D','L',null,'20000000-0000-0000-0000-000000000060','phi','2022-01-06 00:00:00','2022-01-06 00:00:00');
 
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000000','L');
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000001','S');
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000001','L');
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000030','S');
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000030','R');
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000040','L');
-INSERT INTO kunde_interessen (kunde_id, interesse) VALUES ('00000000-0000-0000-0000-000000000040','R');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000000','L');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000001','S');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000001','L');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000030','S');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000030','R');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000040','L');
+INSERT INTO verein_interessen (verein_id, interesse) VALUES ('00000000-0000-0000-0000-000000000040','R');

@@ -16,24 +16,34 @@
  */
 package com.acme.verein.entity;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-// import jakarta.validation.constraints.Pattern;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-// import org.hibernate.validator.constraints.UniqueElements;
+import jakarta.validation.constraints.Size;
 
 import java.net.URL;
 import java.time.LocalDate;
-// import java.util.List;
 import java.util.UUID;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
+import static jakarta.persistence.FetchType.LAZY;
 
 /**
  * Daten eines Vereins. In DDD ist Verein ist ein Aggregate Root.
@@ -42,12 +52,23 @@ import java.util.UUID;
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 // https://thorben-janssen.com/java-records-hibernate-jpa
-@Builder
+@Entity
+@Table(name = "verein")
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter
 @ToString
-@SuppressWarnings({"ClassFanOutComplexity", "JavadocDeclaration", "RequireEmptyLineBeforeBlockTagGroup"})
+@Builder
+@SuppressWarnings({
+    "ClassFanOutComplexity",
+    "RequireEmptyLineBeforeBlockTagGroup",
+    "DeclarationOrder",
+    "MagicNumber",
+    "JavadocDeclaration",
+    "MissingSummary",
+    "RedundantSuppression"})
 public class Verein {
 
     /**
@@ -60,25 +81,31 @@ public class Verein {
      */
     public static final long MAX_KATEGORIE = 9L;
 
+
     /**
      * Die ID des Vereins.
+     *
      * @param id Die ID.
      * @return Die ID.
      */
+    @Id
+    @GeneratedValue
     @EqualsAndHashCode.Include
     private UUID id;
 
     /**
      * Der Name des Vereins.
+     *
      * @param name Der name.
      * @return Der name.
      */
-    @NotEmpty
-
+    @NotNull
+    @Size(max = 40)
     private String name;
 
     /**
      * Die Emailadresse des Vereins.
+     *
      * @param email Die Emailadresse.
      * @return Die Emailadresse.
      */
@@ -87,9 +114,9 @@ public class Verein {
     private String email;
 
 
-
     /**
      * Das Gruendungsdatum des Vereins.
+     *
      * @param gruendungsdatum Das Geburtsdatum.
      * @return Das Geburtsdatum.
      */
@@ -98,6 +125,7 @@ public class Verein {
 
     /**
      * Die URL zur Homepage des Vereins.
+     *
      * @param homepage Die URL zur Homepage.
      * @return Die URL zur Homepage.
      */
@@ -106,17 +134,23 @@ public class Verein {
 
     /**
      * Der Umsatz des Vereins.
+     *
      * @param umsatz Der Umsatz.
      * @return Der Umsatz.
      */
+    @OneToOne(cascade = {PERSIST, REMOVE}, fetch = LAZY)
+    @JoinColumn(updatable = false)
     @ToString.Exclude
     private Umsatz umsatz;
 
     /**
      * Die Adresse des Vereins.
+     *
      * @param adresse Die Adresse.
      * @return Die Adresse.
      */
+    @OneToOne(optional = false, cascade = {PERSIST, REMOVE}, fetch = LAZY)
+    @JoinColumn(updatable = false)
     @Valid
     @ToString.Exclude
     private Adresse adresse;

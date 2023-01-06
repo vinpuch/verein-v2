@@ -16,25 +16,43 @@
  */
 package com.acme.verein.entity;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
+import java.util.UUID;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 /**
  * Adressdaten für die Anwendungslogik und zum Abspeichern in der DB.
  *
- *  @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
-@Builder
+@Entity
+@Table(name = "adresse")
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@Builder
 @SuppressWarnings({"JavadocDeclaration", "RequireEmptyLineBeforeBlockTagGroup"})
 public class Adresse {
+    @Id
+    @GeneratedValue
+    @JsonIgnore
+    private UUID id;
     /**
      * Konstante für den regulären Ausdruck einer Postleitzahl als 5-stellige Zahl mit führender Null.
      */
@@ -42,6 +60,7 @@ public class Adresse {
 
     /**
      * Die Postleitzahl für die Adresse.
+     *
      * @param plz Die Postleitzahl als String
      * @return Die Postleitzahl als String
      */
@@ -51,9 +70,10 @@ public class Adresse {
 
     /**
      * Der Ort für die Adresse.
+     *
      * @param ort Der Ort als String
      * @return Der Ort als String
      */
-    @NotEmpty
+    @NotBlank
     private String ort;
 }
