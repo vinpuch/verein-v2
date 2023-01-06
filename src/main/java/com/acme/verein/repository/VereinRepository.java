@@ -17,161 +17,80 @@
 package com.acme.verein.repository;
 
 import com.acme.verein.entity.Verein;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static com.acme.verein.repository.DB.VEREINE;
-import static java.util.UUID.randomUUID;
-// import static java.util.UUID.randomUUID;
-
 /**
- * Repository für den DB-Zugriff bei Verein.
+ * Repository für den DB-Zugriff bei Vereine.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @Repository
-@Slf4j
-@SuppressWarnings("PublicConstructor")
-public final class VereinRepository {
+public interface VereinRepository extends JpaRepository<Verein, UUID>, JpaSpecificationExecutor<Verein> {
+    @EntityGraph(attributePaths = {"adresse", "interessen"})
+    @Override
+    List<Verein> findAll();
+
+    @EntityGraph(attributePaths = {"adresse", "interessen"})
+    @Override
+    Optional<Verein> findById(UUID id);
+
     /**
-     * Ein Verein anhand seiner ID suchen.
+     * Verein zu gegebener Emailadresse aus der DB ermitteln.
      *
-     * @param id Die Id des gesuchten Vereins
+     * @param email Emailadresse für die Suche
      * @return Optional mit dem gefundenen Verein oder leeres Optional
      */
-    public Optional<Verein> findById(final UUID id) {
-        log.debug("findById: id={}", id);
-        final var result = VEREINE.stream()
-            .filter(verein -> Objects.equals(verein.getId(), id))
-            .findFirst();
-        log.debug("findById: {}", result);
-        return result;
-    }
+    @Query("""
+        SELECT v
+        FROM   Verein v
+        WHERE  lower(v.email) LIKE concat(lower(:email), '%')
+        """)
+    @EntityGraph(attributePaths = {"adresse", "interessen"})
+    Optional<Verein> findByEmail(String email);
 
     /**
-     * Vereine anhand von Suchkriterien ermitteln.
-     * Z.B. mit GET https://localhost:8080/api?name=A&amp;plz=7
+     * Abfrage, ob es einen Verein mit gegebener Emailadresse gibt.
      *
-     * @param suchkriterien Suchkriterien.
-     * @return Gefundene Vereine.
+     * @param email Emailadresse für die Suche
+     * @return true, falls es einen solchen Verein gibt, sonst false
      */
-    @SuppressWarnings({"ReturnCount", "JavadocLinkAsPlainText"})
-    public @NonNull Collection<Verein> find(final Map<String, String> suchkriterien) {
-        log.debug("find: suchkriterien={}", suchkriterien);
-
-        if (suchkriterien.isEmpty()) {
-            return findAll();
-        }
-
-        // for-Schleife statt Higher-order Function "forEach" wegen return
-        for (final var entry : suchkriterien.entrySet()) {
-            if (entry.getKey().equals("name")) {
-                return findByName(entry.getValue());
-            } else {
-                log.debug("find: ungueltiges Suchkriterium={}", entry.getKey());
-            }
-        }
-
-        return Collections.emptyList();
-    }
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    boolean existsByEmail(String email);
 
     /**
-     * Alle Vereine als Collection ermitteln, wie sie später auch von der DB kommen.
-     *
-     * @return Alle Vereine
-     */
-    public @NonNull List<Verein> findAll() {
-        return VEREINE;
-    }
-
-    /**
-     * Vereine anhand des namens suchen.
+     * Verein anhand des Namens suchen.
      *
      * @param name Der (Teil-) Name der gesuchten Vereine
      * @return Die gefundenen Vereine oder eine leere Collection
      */
-    public @NonNull Collection<Verein> findByName(final CharSequence name) {
-        log.debug("findByName: name={}", name);
-        final var vereine = VEREINE.stream()
-            .filter(verein -> verein.getName().contains(name))
-            .collect(Collectors.toList());
-        log.debug("findByName: vereine={}", vereine);
-        return vereine;
-    }
+    @Query("""
+        SELECT   v
+        FROM     Verein v
+        WHERE    lower(v.name) LIKE concat('%', lower(:name), '%')
+        ORDER BY v.id
+        """)
+    @EntityGraph(attributePaths = {"adresse", "interessen"})
+    Collection<Verein> findByName(CharSequence name);
+
     /**
      * Abfrage, welche Namen es zu einem Präfix gibt.
      *
      * @param prefix Name-Präfix.
      * @return Die passenden Namen oder eine leere Collection.
      */
-    public @NonNull Collection<String> findNamenByPrefix(final @NonNull String prefix) {
-        log.debug("findByName: prefix={}", prefix);
-        final var namen = VEREINE.stream()
-            .map(Verein::getName)
-            .filter(name -> name.startsWith(prefix))
-            .distinct()
-            .toList();
-        log.debug("findByName: namen={}", namen);
-        return namen;
-    }
-
-    /**
-     * Einen neuen Verein anlegen.
-     *
-     * @param verein Das Objekt des neu anzulegenden Vereins.
-     * @return Das neu angelegte Verein mit generierter ID.
-     */
-    public @NonNull Verein create(final @NonNull Verein verein) {
-        log.debug("create: {}", verein);
-        verein.setId(randomUUID());
-        VEREINE.add(verein);
-        log.debug("create: {}", verein);
-        return verein;
-    }
-
-    /**
-     * Einen vorhandenen Verein aktualisieren.
-     *
-     * @param verein Das Objekt mit den neuen Daten
-     */
-    public void update(final @NonNull Verein verein) {
-        log.debug("update: {}", verein);
-        final OptionalInt index = IntStream
-            .range(0, VEREINE.size())
-            .filter(i -> Objects.equals(VEREINE.get(i).getId(), verein.getId()))
-            .findFirst();
-        log.trace("update: index={}", index);
-        if (index.isEmpty()) {
-            return;
-        }
-        VEREINE.set(index.getAsInt(), verein);
-        log.debug("update: {}", verein);
-    }
-
-    /**
-     * Findet E-Mail.
-     *
-     * @param email nach Emails filtern
-     * @return Die neu angelegten Vereine mit E-Mail
-     */
-    public Optional<Verein> findByEmail(final String email) {
-        log.debug("findByEmail: {}", email);
-        final var result = VEREINE.stream()
-            .filter(verein -> Objects.equals(verein.getEmail(), email))
-            .findFirst();
-        log.debug("findByEmail: {}", result);
-        return result;
-    }
+    @Query("""
+        SELECT DISTINCT v.name
+        FROM     Verein v
+        WHERE    lower(v.name) LIKE concat(lower(:prefix), '%')
+        ORDER BY v.name
+        """)
+    Collection<String> findNamenByPrefix(String prefix);
 }

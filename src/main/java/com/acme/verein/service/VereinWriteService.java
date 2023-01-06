@@ -59,6 +59,7 @@ public final class VereinWriteService {
         }
 
         final var vereinDB = repo.create(verein);
+        repo.
         log.debug("create: {}", vereinDB);
         return vereinDB;
     }

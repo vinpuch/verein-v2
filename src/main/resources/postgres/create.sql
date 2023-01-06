@@ -71,19 +71,12 @@ CREATE TABLE IF NOT EXISTS verein (
     id            uuid PRIMARY KEY USING INDEX TABLESPACE vereinspace,
                   -- https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-INT
     version       integer NOT NULL DEFAULT 0,
-    nachname      varchar(40) NOT NULL,
+    name      varchar(40) NOT NULL,
                   -- impliziter Index als B-Baum durch UNIQUE
                   -- https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS
     email         varchar(40) NOT NULL UNIQUE USING INDEX TABLESPACE vereinspace,
                   -- https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-CHECK-CONSTRAINTS
-    kategorie     integer NOT NULL CHECK (kategorie >= 0 AND kategorie <= 9),
-                  -- https://www.postgresql.org/docs/current/datatype-boolean.html
-    has_newsletter boolean NOT NULL DEFAULT FALSE,
-                  -- https://www.postgresql.org/docs/current/datatype-datetime.html
-    geburtsdatum  date CHECK (geburtsdatum < current_date),
-    homepage      varchar(40),
-    geschlecht    char(1) CHECK (geschlecht ~ 'M|W|D'),
-    familienstand varchar(2) CHECK (familienstand ~ 'L|VH|G|VW'),
+    gruendungsdatum  date CHECK (gruendungsdatum < current_date),
     umsatz_id     uuid REFERENCES umsatz,
     adresse_id    uuid NOT NULL REFERENCES adresse,
     username      varchar(20) NOT NULL REFERENCES login(username),
@@ -92,7 +85,7 @@ CREATE TABLE IF NOT EXISTS verein (
     aktualisiert  timestamp NOT NULL
 ) TABLESPACE vereinspace;
 
-CREATE INDEX IF NOT EXISTS verein_nachname_idx ON verein(nachname) TABLESPACE vereinspace;
+CREATE INDEX IF NOT EXISTS verein_name_idx ON verein(name) TABLESPACE vereinspace;
 
 CREATE TABLE IF NOT EXISTS verein_interessen (
     verein_id  uuid NOT NULL REFERENCES verein,
