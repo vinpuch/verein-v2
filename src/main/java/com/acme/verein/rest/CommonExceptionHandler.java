@@ -16,7 +16,6 @@
  */
 package com.acme.verein.rest;
 
-import com.acme.verein.service.AccessForbiddenException;
 import com.acme.verein.service.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;

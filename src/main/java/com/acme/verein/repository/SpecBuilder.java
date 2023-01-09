@@ -62,9 +62,7 @@ public class SpecBuilder {
     @SuppressWarnings("CyclomaticComplexity")
     private Specification<Verein> toSpec(final String paramName, final List<String> paramValues) {
         log.trace("toSpec: paramName={}, paramValues={}", paramName, paramValues);
-        if (Objects.equals(paramName, "interesse")) {
-            return toSpecInteressen(paramValues);
-        }
+
 
         if (paramValues == null || paramValues.size() != 1) {
             return null;
@@ -73,7 +71,7 @@ public class SpecBuilder {
         final var value = paramValues.get(0);
         return switch (paramName) {
             case "name" -> name(value);
-            case "email" ->  email(value);
+            case "email" -> email(value);
             case "plz" -> plz(value);
             case "ort" -> ort(value);
             default -> null;
@@ -106,11 +104,6 @@ public class SpecBuilder {
             );
         };
     }
-
-
-
-
-
 
 
     private Specification<Verein> plz(final String prefix) {

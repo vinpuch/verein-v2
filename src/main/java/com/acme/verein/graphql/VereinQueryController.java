@@ -23,9 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import static java.util.Collections.emptyMap;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
+
+import static java.util.Collections.emptyMap;
 
 /**
  * Eine Controller-Klasse für das Lesen mit der GraphQL-Schnittstelle und den Typen aus dem GraphQL-Schema.
@@ -59,9 +63,10 @@ final class VereinQueryController {
      * @return Die gefundenen vereine als Collection
      */
     @QueryMapping
-    Collection<Verein> vereine(@Argument final Suchkriterien input) {
-        log.debug("vereine: suchkriterien={}", input);
-        final var vereine = service.find(input.toMap());
+    Collection<Verein> vereine(@Argument final Optional<Suchkriterien> input) {
+        log.debug("vereine: input={}", input);
+        final var suchkriterien = input.map(Suchkriterien::toMap).orElse(emptyMap());
+        final var vereine = service.find(suchkriterien);
         log.debug("vereine: {}", vereine);
         return vereine;
     }

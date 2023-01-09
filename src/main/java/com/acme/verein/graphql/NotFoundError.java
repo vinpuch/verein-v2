@@ -37,7 +37,7 @@ import static org.springframework.graphql.execution.ErrorType.NOT_FOUND;
 @SuppressWarnings("SerializableDeserializableClassInSecureContext")
 class NotFoundError implements GraphQLError {
     private final UUID id;
-    private final Map<String, String> suchkriterien;
+    private final Map<String, List<String>> suchkriterien;
 
     /**
      * ErrorType auf NOT_FOUND setzen.

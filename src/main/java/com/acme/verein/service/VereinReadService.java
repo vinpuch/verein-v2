@@ -53,7 +53,6 @@ public class VereinReadService {
      * @param id Die Id des gesuchten Vereine
      * @return Der gefundene Verein
      * @throws NotFoundException Falls kein Verein gefunden wurde
-     * @throws AccessForbiddenException Falls die erforderlichen Rollen nicht gegeben sind
      */
     public @NonNull Verein findById(final UUID id) {
         log.debug("findById: id={}", id);

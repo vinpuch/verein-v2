@@ -26,6 +26,7 @@ import jakarta.validation.constraints.Size;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
@@ -140,6 +143,12 @@ public class Verein {
     @JoinColumn(updatable = false)
     @ToString.Exclude
     private Umsatz umsatz;
+
+    @CreationTimestamp
+    private LocalDateTime erzeugt;
+
+    @UpdateTimestamp
+    private LocalDateTime aktualisiert;
 
     /**
      * Die Adresse des Vereins.
