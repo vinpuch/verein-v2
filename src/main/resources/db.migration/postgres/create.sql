@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS verein (
     email         varchar(40) NOT NULL UNIQUE USING INDEX TABLESPACE vereinspace,
                   -- https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-CHECK-CONSTRAINTS
     gruendungsdatum  date CHECK (gruendungsdatum < current_date),
+  homepage      varchar(40),
     umsatz_id     uuid REFERENCES umsatz,
     adresse_id    uuid NOT NULL REFERENCES adresse,
     username      varchar(20) NOT NULL REFERENCES login(username),
@@ -86,12 +87,3 @@ CREATE TABLE IF NOT EXISTS verein (
 ) TABLESPACE vereinspace;
 
 CREATE INDEX IF NOT EXISTS verein_name_idx ON verein(name) TABLESPACE vereinspace;
-
-CREATE TABLE IF NOT EXISTS verein_interessen (
-    verein_id  uuid NOT NULL REFERENCES verein,
-    interesse char(1) NOT NULL CHECK (interesse ~ 'S|L|R'),
-
-    PRIMARY KEY (verein_id, interesse) USING INDEX TABLESPACE vereinspace
-) TABLESPACE vereinspace;
-
-CREATE INDEX IF NOT EXISTS verein_interessen_verein_idx ON verein_interessen(verein_id) TABLESPACE vereinspace;

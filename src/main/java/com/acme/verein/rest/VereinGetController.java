@@ -24,21 +24,25 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
+
+import static io.micrometer.core.instrument.binder.http.HttpRequestTags.status;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_MODIFIED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 /**
  * Eine @RestController-Klasse bildet die REST-Schnittstelle, wobei die HTTP-Methoden, Pfade und MIME-Typen auf die
@@ -79,11 +83,24 @@ final class VereinGetController {
     @Operation(summary = "Suche mit der Verein-ID", tags = "Suchen")
     @ApiResponse(responseCode = "200", description = "Verein gefunden")
     @ApiResponse(responseCode = "404", description = "Verein nicht gefunden")
-    VereinModel findById(@PathVariable final UUID id, final HttpServletRequest request) {
+    VereinModel findById( @PathVariable final UUID id,
+                          @RequestHeader("If-None-Match") final Optional<String> version,
+                          final HttpServletRequest request) {
+
+        final var verein = service.findById(id, user);
+        log.debug("findById: {}", verein);
+
+        final var currentVersion = "\"" + verein.getVersion() + '"';
+        if (Objects.equals(version.orElse(null), currentVersion)) {
+            return status(NOT_MODIFIED).build();
+        }
         log.debug("findById: id={}", id);
 
         // Geschaeftslogik bzw. Anwendungskern
-        final var verein = service.findById(id);
+
+        return ok().eTag(currentVersion).body(model);
+
+
 
         // HATEOAS
         final var model = new VereinModel(verein);
@@ -98,6 +115,7 @@ final class VereinGetController {
 
         log.debug("findById: {}", model);
         return model;
+
     }
 
 
