@@ -19,9 +19,9 @@ package com.acme.verein.rest;
 /**
  * Enum für ProblemDetail.type.
  *
- * @author [Jürgen Zimmermann](mailto:Juergen.Zimmermann@h-ka.de)
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
-enum ProblemType {
+public enum ProblemType {
     /**
      * Constraints als Fehlerursache.
      */
@@ -33,7 +33,7 @@ enum ProblemType {
     UNPROCESSABLE("unprocessable"),
 
     /**
-     * Fehler beim Header `If-Match`.
+     * Fehler beim Header If-Match.
      */
     PRECONDITION("precondition"),
 
@@ -48,7 +48,12 @@ enum ProblemType {
         this.value = value;
     }
 
-    String getValue() {
+    /**
+     * Interner Enum-Wert wird zurückgegeben.
+     *
+     * @return Interner Enum-Wert
+     */
+    public String getValue() {
         return value;
     }
 }

@@ -16,29 +16,19 @@
  */
 package com.acme.verein.service;
 
-import com.acme.verein.entity.Verein;
-import jakarta.validation.ConstraintViolation;
 import lombok.Getter;
 
-import java.util.Collection;
-
 /**
- * Exception, falls es mindestens ein verletztes Constraint gibt.
+ * Exception, falls die Versionsnummer nicht aktuell ist.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @Getter
-public class ConstraintViolationsException extends RuntimeException {
-    /**
-     * Die verletzten Constraints.
-     */
-    private final Collection<ConstraintViolation<Verein>> violations;
+public class VersionOutdatedException extends RuntimeException {
+    private final int version;
 
-    ConstraintViolationsException(
-        @SuppressWarnings("ParameterHidesMemberVariable")
-        final Collection<ConstraintViolation<Verein>> violations
-    ) {
-        super("Constraints sind verletzt");
-        this.violations = violations;
+    VersionOutdatedException(final int version) {
+        super("Die Versionsnummer " + version + " ist veraltet.");
+        this.version = version;
     }
 }

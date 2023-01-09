@@ -16,29 +16,25 @@
  */
 package com.acme.verein.service;
 
-import com.acme.verein.entity.Verein;
-import jakarta.validation.ConstraintViolation;
 import lombok.Getter;
 
 import java.util.Collection;
 
 /**
- * Exception, falls es mindestens ein verletztes Constraint gibt.
+ * Exception, falls der Zugriff wegen fehlender Rollen nicht erlaubt ist.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
 @Getter
-public class ConstraintViolationsException extends RuntimeException {
+public class AccessForbiddenException extends RuntimeException {
     /**
-     * Die verletzten Constraints.
+     * Vorhandene Rollen.
      */
-    private final Collection<ConstraintViolation<Verein>> violations;
+    private final Collection<String> rollen;
 
-    ConstraintViolationsException(
-        @SuppressWarnings("ParameterHidesMemberVariable")
-        final Collection<ConstraintViolation<Verein>> violations
-    ) {
-        super("Constraints sind verletzt");
-        this.violations = violations;
+    @SuppressWarnings("ParameterHidesMemberVariable")
+    AccessForbiddenException(final Collection<String> rollen) {
+        super("Unzureichende Rollen: " + rollen);
+        this.rollen = rollen;
     }
 }

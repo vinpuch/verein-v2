@@ -16,16 +16,16 @@
  */
 package com.acme.verein.service;
 
+import lombok.Getter;
+
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import lombok.Getter;
 
 /**
  * RuntimeException, falls kein Verein gefunden wurde.
  */
 @Getter
-@SuppressWarnings("ParameterHidesMemberVariable")
 public final class NotFoundException extends RuntimeException {
     /**
      * Nicht-vorhandene ID.
@@ -35,27 +35,23 @@ public final class NotFoundException extends RuntimeException {
     /**
      * Suchkriterien, zu denen nichts gefunden wurde.
      */
-    private final Map<String, String> suchkriterien;
+    private final Map<String, List<String>> suchkriterien;
 
     NotFoundException(final UUID id) {
         super("Kein Verein mit der ID " + id + " gefunden.");
         this.id = id;
-        //noinspection AssignmentToNull
         suchkriterien = null;
     }
 
-    NotFoundException(final Map<String, String> suchkriterien) {
+    NotFoundException(final Map<String, List<String>> suchkriterien) {
         super("Keine Vereine gefunden.");
-        //noinspection AssignmentToNull
         id = null;
         this.suchkriterien = suchkriterien;
     }
 
-    @SuppressWarnings("AssignmentToNull")
     NotFoundException() {
         super("Keine Vereine gefunden.");
         id = null;
         suchkriterien = null;
     }
-
 }

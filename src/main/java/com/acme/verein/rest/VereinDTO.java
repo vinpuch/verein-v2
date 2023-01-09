@@ -16,23 +16,23 @@
  */
 package com.acme.verein.rest;
 
-import com.acme.verein.entity.Adresse;
-import com.acme.verein.entity.Verein;
-import com.acme.verein.entity.Umsatz;
+import com.acme.verein.entity.*;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
- * ValueObject für das Neuanlegen und Ändern eines neuen Vereins. Beim Lesen wird die Klasse VereinModel für die Ausgabe
+ * ValueObject für das Neuanlegen und Ändern eines neuen Vereine. Beim Lesen wird die Klasse VereinModel für die Ausgabe
  * verwendet.
  *
- * @param name            Gültiger Nachname eines Vereins, d.h. mit einem geeigneten Muster.
- * @param email           E-Mail eines Vereins.
- * @param gruendungsdatum Das Gruendungsdatum eines Vereins.
- * @param homepage        Die Homepage eines Vereins.
- * @param umsatz          Der Umsatz eines Vereins.
- * @param adresse         Die Adresse eines Vereins.
+ * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
+ * @param name Gültiger Name eines Vereine, d.h. mit einem geeigneten Muster.
+ * @param email Email eines Vereine.
+ * @param gruendungsdatum Das Gruendungsdatum eines Vereine.
+ * @param homepage Die Homepage eines Vereine.
+ * @param umsatz Der Umsatz eines Vereine.
+ * @param adresse Die Adresse eines Vereine.
  */
 @SuppressWarnings("RecordComponentNumber")
 record VereinDTO(
@@ -40,24 +40,44 @@ record VereinDTO(
     String email,
     LocalDate gruendungsdatum,
     URL homepage,
-    Umsatz umsatz,
-    Adresse adresse
+    UmsatzDTO umsatz,
+    AdresseDTO adresse
 ) {
     /**
      * Konvertierung in ein Objekt des Anwendungskerns.
      *
+     *
      * @return Vereinobjekt für den Anwendungskern
      */
     Verein toVerein() {
+        final var umsatzEntity = umsatz() == null
+            ? null
+            : Umsatz
+                .builder()
+                .id(null)
+                .betrag(umsatz().betrag())
+                .waehrung(umsatz().waehrung())
+                .build();
+        final var adresseEntity = adresse() == null
+            ? null
+            : Adresse
+                .builder()
+                .id(null)
+                .plz(adresse().plz())
+                .ort(adresse().ort())
+                .build();
         return Verein
             .builder()
             .id(null)
+            .version(0)
             .name(name)
             .email(email)
             .gruendungsdatum(gruendungsdatum)
             .homepage(homepage)
-            .umsatz(umsatz)
-            .adresse(adresse)
+            .umsatz(umsatzEntity)
+            .adresse(adresseEntity)
+            .erzeugt(null)
+            .aktualisiert(null)
             .build();
     }
 }

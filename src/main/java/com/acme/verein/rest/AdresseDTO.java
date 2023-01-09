@@ -12,26 +12,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.acme.verein.service;
-
-import lombok.Getter;
+package com.acme.verein.rest;
 
 /**
- * Exception, falls die Emailadresse bereits existiert.
+ * ValueObject für das Neuanlegen und Ändern eines neuen Vereine.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
+ * @param plz Postleitzahl
+ * @param ort Ort
  */
-@Getter
-public class EmailExistsException extends RuntimeException {
-    /**
-     * Bereits vorhandene Emailadresse.
-     */
-    private final String email;
+record AdresseDTO(
+    String plz,
 
-    EmailExistsException(@SuppressWarnings("ParameterHidesMemberVariable") final String email) {
-        super("Die Emailadresse " + email + " existiert bereits");
-        this.email = email;
-    }
+    String ort) {
 }

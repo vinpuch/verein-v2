@@ -115,8 +115,8 @@ public class Verein {
     /**
      * Das Gruendungsdatum des Vereins.
      *
-     * @param gruendungsdatum Das Geburtsdatum.
-     * @return Das Geburtsdatum.
+     * @param gruendungsdatum Das Gruendungsdatum.
+     * @return Das Gruendungsdatum.
      */
     @Past
     private LocalDate gruendungsdatum;
@@ -152,4 +152,15 @@ public class Verein {
     @Valid
     @ToString.Exclude
     private Adresse adresse;
+
+    /**
+     * Produktdaten überschreiben.
+     *
+     * @param verein Neue Produktdaten.
+     */
+    public void set(final Verein verein) {
+        name = verein.name;
+        gruendungsdatum = verein.gruendungsdatum;
+        homepage = verein.homepage;
+    }
 }

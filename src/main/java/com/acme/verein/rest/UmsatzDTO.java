@@ -12,26 +12,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.acme.verein.service;
+package com.acme.verein.rest;
 
-import lombok.Getter;
+import java.math.BigDecimal;
+import java.util.Currency;
 
 /**
- * Exception, falls die Emailadresse bereits existiert.
+ * ValueObject für das Neuanlegen und Ändern eines neuen Vereine.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
+ * @param betrag Betrag
+ * @param waehrung Währung
  */
-@Getter
-public class EmailExistsException extends RuntimeException {
-    /**
-     * Bereits vorhandene Emailadresse.
-     */
-    private final String email;
-
-    EmailExistsException(@SuppressWarnings("ParameterHidesMemberVariable") final String email) {
-        super("Die Emailadresse " + email + " existiert bereits");
-        this.email = email;
-    }
+record UmsatzDTO(
+    BigDecimal betrag,
+    Currency waehrung
+) {
 }

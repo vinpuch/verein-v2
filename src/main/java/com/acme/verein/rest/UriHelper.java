@@ -17,13 +17,11 @@
 package com.acme.verein.rest;
 
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 import static com.acme.verein.rest.VereinGetController.REST_PATH;
 
@@ -56,16 +54,10 @@ class UriHelper {
         // KEIN Forwarding von einem API-Gateway
         // URI aus Schema, Host, Port und Pfad
         final var uriComponents = ServletUriComponentsBuilder.fromRequestUri(request).build();
-        final var baseUriStr = uriComponents.getScheme() + "://" + uriComponents.getHost() + ':' +
+        final var baseUri = uriComponents.getScheme() + "://" + uriComponents.getHost() + ':' +
             uriComponents.getPort() + REST_PATH;
-        log.debug("getBaseUri (ohne Forwarding): baseUriStr={}", baseUriStr);
-        final URI baseUri;
-        try {
-            baseUri = new URI(baseUriStr);
-        } catch (final URISyntaxException ex) {
-            throw new IllegalStateException(ex);
-        }
-        return baseUri;
+        log.debug("getBaseUri (ohne Forwarding): baseUri={}", baseUri);
+        return URI.create(baseUri);
     }
 
     private URI getBaseUriForwarded(final HttpServletRequest request, final String forwardedHost) {
@@ -83,14 +75,8 @@ class UriHelper {
             log.trace("getBaseUriForwarded: Kein \"" + X_FORWARDED_PREFIX + "\" im Header");
             forwardedPrefix = VEREINE_PREFIX;
         }
-        final var baseUriStr = forwardedProto + "://" + forwardedHost + forwardedPrefix + REST_PATH;
-        log.debug("getBaseUriForwarded: baseUriStr={}", baseUriStr);
-        final URI baseUri;
-        try {
-            baseUri = new URI(baseUriStr);
-        } catch (final URISyntaxException ex) {
-            throw new IllegalStateException(ex);
-        }
-        return baseUri;
+        final var baseUri = forwardedProto + "://" + forwardedHost + forwardedPrefix + REST_PATH;
+        log.debug("getBaseUriForwarded: baseUri={}", baseUri);
+        return URI.create(baseUri);
     }
 }

@@ -18,54 +18,52 @@ package com.acme.verein.service;
 
 import com.acme.verein.entity.Verein;
 import com.acme.verein.repository.VereinRepository;
+import com.acme.verein.repository.SpecBuilder;
+import com.acme.verein.security.Rolle;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
- * Anwendungslogik für Verein.
+ * Anwendungslogik für Vereine.
  * <img src="../../../../../asciidoc/VereinReadService.svg" alt="Klassendiagramm">
+ * Schreiboperationen werden mit Transaktionen durchgeführt und Lese-Operationen mit Readonly-Transaktionen:
+ * <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#transactions">siehe Dokumentation</a>.
  *
  * @author <a href="mailto:Juergen.Zimmermann@h-ka.de">Jürgen Zimmermann</a>
  */
+// https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#transactions
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
-public final class VereinReadService {
-    @SuppressWarnings("VisibilityModifier")
+public class VereinReadService {
     private final VereinRepository repo;
+    private final SpecBuilder specBuilder;
 
     /**
-     * Einen Verein anhand seiner ID suchen.
+     * Einen Vereine anhand seiner ID suchen.
      *
-     * @param id Die Id des gesuchten Vereins
+     * @param id Die Id des gesuchten Vereine
      * @return Der gefundene Verein
      * @throws NotFoundException Falls kein Verein gefunden wurde
+     * @throws AccessForbiddenException Falls die erforderlichen Rollen nicht gegeben sind
      */
     public @NonNull Verein findById(final UUID id) {
         log.debug("findById: id={}", id);
-        final var verein = repo.findById(id)
-            .orElseThrow(() -> new NotFoundException(id));
+        final var vereinOpt = repo.findById(id);
+
+        // admin: Vereinndaten evtl. nicht gefunden
+        final var verein = vereinOpt.orElseThrow(() -> new NotFoundException(id));
         log.debug("findById: {}", verein);
         return verein;
     }
-
-    /**
-     * Methode um alle Vereine zu finden.
-     *
-     * @return findet alle Vereine
-     */
-    public Collection<Verein> findAll() {
-
-        return repo.findAll();
-    }
-
 
     /**
      * Vereine anhand von Suchkriterien als Collection suchen.
@@ -74,19 +72,18 @@ public final class VereinReadService {
      * @return Die gefundenen Vereine oder eine leere Liste
      * @throws NotFoundException Falls keine Vereine gefunden wurden
      */
-    @SuppressWarnings({"ReturnCount", "NestedIfDepth"})
-    public Collection<Verein> find(final Map<String, String> suchkriterien) {
+    @SuppressWarnings({"ReturnCount", "NestedIfDepth", "CyclomaticComplexity"})
+    public @NonNull Collection<Verein> find(@NonNull final Map<String, List<String>> suchkriterien) {
         log.debug("find: suchkriterien={}", suchkriterien);
 
         if (suchkriterien.isEmpty()) {
             return repo.findAll();
         }
 
-        // kommt rein
         if (suchkriterien.size() == 1) {
-            final var name = suchkriterien.get("name");
-            if (name != null) {
-                final var vereine = repo.findByName(name);
+            final var namen = suchkriterien.get("name");
+            if (namen != null && namen.size() == 1) {
+                final var vereine = repo.findByName(namen.get(0));
                 if (vereine.isEmpty()) {
                     throw new NotFoundException(suchkriterien);
                 }
@@ -94,9 +91,9 @@ public final class VereinReadService {
                 return vereine;
             }
 
-            final var email = suchkriterien.get("email");
-            if (email != null) {
-                final var verein = repo.findByEmail(email);
+            final var emails = suchkriterien.get("email");
+            if (emails != null && emails.size() == 1) {
+                final var verein = repo.findByEmail(emails.get(0));
                 if (verein.isEmpty()) {
                     throw new NotFoundException(suchkriterien);
                 }
@@ -105,25 +102,32 @@ public final class VereinReadService {
                 return vereine;
             }
         }
-        final var vereine = repo.find(suchkriterien);
+
+        final var spec = specBuilder
+            .build(suchkriterien)
+            .orElseThrow(() -> new NotFoundException(suchkriterien));
+        final var vereine = repo.findAll(spec);
         if (vereine.isEmpty()) {
             throw new NotFoundException(suchkriterien);
         }
         log.debug("find: {}", vereine);
         return vereine;
     }
+
     /**
-     * Abfrage, welche Nachnamen es zu einem Präfix gibt.
+     * Abfrage, welche Namen es zu einem Präfix gibt.
      *
-     * @param prefix Nachname-Präfix.
-     * @return Die passenden Nachnamen.
-     * @throws NotFoundException Falls keine Nachnamen gefunden wurden.
+     * @param prefix Name-Präfix.
+     * @return Die passenden Namen.
+     * @throws NotFoundException Falls keine Namen gefunden wurden.
      */
-    public Collection<String> findNamenByPrefix(final String prefix) {
+    public @NonNull Collection<String> findNamenByPrefix(final String prefix) {
+        log.debug("findNamenByPrefix: {}", prefix);
         final var namen = repo.findNamenByPrefix(prefix);
         if (namen.isEmpty()) {
             throw new NotFoundException();
         }
+        log.debug("findNamenByPrefix: {}", namen);
         return namen;
     }
 }
